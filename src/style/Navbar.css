@@ -1,0 +1,56 @@
+.custom-navbar {
+  background-color: #F5F5F5; /* Cor de fundo suave */
+  border-bottom: 2px solid #E1BEE7; /* Linha elegante abaixo da navbar */
+}
+
+.custom-brand {
+  font-family: 'Playfair Display', serif; /* Fonte elegante e feminina */
+  font-size: 24px;
+  color: #FAB1B1; /* Cor principal */
+  text-decoration: none;
+}
+
+.custom-toggler {
+  border-color: #FAB1B1; /* Cor do botão de toggle */
+}
+
+.custom-link {
+  color: #333333; /* Cor neutra para os links */
+  font-weight: bold;
+  margin-right: 15px;
+}
+
+.custom-link:hover {
+  color: #FAB1B1; /* Efeito hover na cor principal */
+}
+
+.custom-cart-link {
+  color: #333333;
+  position: relative;
+}
+
+.custom-cart-badge {
+  background-color: #FAB1B1; /* Cor de destaque para o número de itens no carrinho */
+  color: white;
+}
+
+.custom-btn-login {
+  background-color: #FAB1B1;
+  color: white;
+  border-radius: 5px;
+}
+
+.custom-btn-login:hover {
+  background-color: #E1BEE7; /* Efeito hover */
+}
+
+.custom-btn-logout {
+  background-color: #FFCDD2;
+  color: white;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.custom-btn-logout:hover {
+  background-color: #E57373; /* Efeito hover */
+}

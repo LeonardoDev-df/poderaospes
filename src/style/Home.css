@@ -1,0 +1,111 @@
+.home-container {
+    background-color: #F5F5F5; /* Cor de fundo suave */
+    padding: 20px;
+  }
+  
+  .hero-section {
+    text-align: center;
+    padding: 50px 20px;
+    background-image: url('https://source.unsplash.com/1600x900/?shoes,female'); /* Imagem de fundo representativa */
+    background-size: cover;
+    background-position: center;
+    color: white;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    position: relative; /* Para o pseudo-elemento */
+  }
+  
+  .hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo escurecido para melhorar a legibilidade do texto */
+    border-radius: 8px;
+    z-index: 1; /* Coloca o pseudo-elemento abaixo do texto */
+  }
+  
+  .hero-title {
+    font-family: 'Playfair Display', serif; /* Fonte elegante */
+    font-size: 36px;
+    margin-bottom: 10px;
+    position: relative; /* Para garantir que fique acima do pseudo-elemento */
+    z-index: 2; /* Coloca o texto acima do fundo */
+  }
+  
+  .hero-subtitle {
+    font-size: 20px;
+    margin-bottom: 20px;
+    z-index: 2; /* Coloca o texto acima do fundo */
+  }
+  
+  .hero-button {
+    background-color: #FAB1B1; /* Cor do botão */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 2; /* Coloca o botão acima do fundo */
+  }
+  
+  .hero-button:hover {
+    background-color: #E1BEE7; /* Efeito hover */
+  }
+  
+  .featured-products {
+    margin-top: 20px;
+  }
+  
+  .section-title {
+    font-size: 28px;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .product-list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .product-card {
+    background-color: #FFF;
+    border: 1px solid #E1BEE7; /* Borda leve */
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px;
+    width: 200px; /* Tamanho fixo para os produtos */
+    text-align: center;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidade */
+  }
+  
+  .product-card:hover {
+    transform: scale(1.05); /* Efeito de destaque ao passar o mouse */
+  }
+  
+  .product-image {
+    width: 100%;
+    height: auto;
+    border-radius: 5px; /* Borda arredondada na imagem */
+  }
+  
+  .product-name {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .product-price {
+    color: #e63946; /* Cor para o preço */
+    font-weight: bold;
+    margin: 5px 0;
+  }
+  
+  .product-description {
+    color: #333; /* Cor da descrição */
+  }
+  

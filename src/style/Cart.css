@@ -1,0 +1,17 @@
+/* src/style/Cart.css */
+.container {
+    max-width: 800px;
+  }
+  
+  .card {
+    transition: transform 0.2s;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .text-end {
+    margin-top: 20px;
+  }
+  

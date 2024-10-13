@@ -1,0 +1,67 @@
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background-color: #F5F5F5; /* Fundo neutro */
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .auth-card {
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    background-color: #FFFFFF; /* Fundo branco para o cartão */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .auth-title {
+    color: #FAB1B1; /* Cor primária */
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Playfair Display', serif; /* Fonte cursiva */
+  }
+  
+  .auth-tabs {
+    margin-bottom: 1rem;
+    margin-bottom: 20px;
+  }
+  
+  .auth-form {
+    width: 100%;
+  }
+  
+  .auth-input {
+    margin-bottom: 1rem;
+    border: 1px solid #E1BEE7; /* Cor secundária */
+    border-radius: 5px;
+    padding: 10px;
+  }
+  
+  .auth-btn {
+    width: 100%;
+    padding: 10px;
+    font-weight: bold;
+  }
+
+  .auth-btn.primary {
+    background-color: #FAB1B1; /* Cor primária */
+    border: none;
+  }
+
+  .auth-btn.success {
+    background-color: #B2EBF2; /* Cor de sucesso */
+    border: none;
+  }
+  
+  .text-danger {
+    color: #FF0000; /* Cor de erro */
+    font-size: 0.875rem;
+    margin-top: -10px;
+  }
+  
