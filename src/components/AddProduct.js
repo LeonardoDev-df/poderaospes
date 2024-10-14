@@ -1,8 +1,9 @@
-// src/components/AddProduct.js
 import React, { useState } from 'react';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import ProductForm from './ProductForm'; // Importa o formulário
 import '../style/AddProduct.css'; // Estilo opcional
+import { getAuth } from 'firebase/auth';
 
 const AddProduct = () => {
   const [product, setProduct] = useState({
@@ -10,10 +11,11 @@ const AddProduct = () => {
     description: '',
     price: '',
     category: '',
-    image: null, // Para armazenar a imagem selecionada
+    image: null,
   });
 
   const [message, setMessage] = useState('');
+  const [uploadProgress, setUploadProgress] = useState(0); // Novo estado para progresso do upload
   const db = getFirestore();
   const storage = getStorage();
 
@@ -28,104 +30,83 @@ const AddProduct = () => {
   const handleFileChange = (e) => {
     setProduct((prev) => ({
       ...prev,
-      image: e.target.files[0], // Armazena a imagem
+      image: e.target.files[0],
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    try {
-      // Primeiro, faça o upload da imagem para o Firebase Storage
-      if (product.image) {
-        const imageRef = ref(storage, `products/${product.image.name}`);
-        await uploadBytes(imageRef, product.image);
-      }
+  const uploadImage = async () => {
+    if (!product.image) return ''; // Retorna uma string vazia se não houver imagem
 
-      // Depois, adicione os detalhes do produto ao Firestore
-      const docRef = await addDoc(collection(db, 'products'), {
-        name: product.name,
-        description: product.description,
-        price: parseFloat(product.price),
-        category: product.category,
-        imageUrl: product.image ? `products/${product.image.name}` : '', // URL da imagem, se necessário
-      });
+    const imageRef = ref(storage, `products/${product.image.name}`);
+    const uploadTask = uploadBytesResumable(imageRef, product.image);
 
-      setMessage('Produto adicionado com sucesso!');
-      setProduct({
-        name: '',
-        description: '',
-        price: '',
-        category: '',
-        image: null,
-      });
-    } catch (error) {
-      console.error('Erro ao adicionar produto: ', error);
-      setMessage('Erro ao adicionar produto. Tente novamente.');
-    }
+    return new Promise((resolve, reject) => {
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setUploadProgress(progress); // Atualiza o progresso do upload
+          console.log('Upload is ' + progress + '% done');
+        },
+        (error) => {
+          console.error('Erro no upload da imagem: ', error);
+          reject(error);
+        },
+        async () => {
+          const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+          resolve(imageUrl); // Resolve a promessa com a URL da imagem
+        }
+      );
+    });
   };
+
+  const auth = getAuth();
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!auth.currentUser) {
+    setMessage('Você precisa estar logado para adicionar um produto.');
+    return;
+  }
+
+  try {
+    let imageUrl = await uploadImage(); // Faz o upload da imagem e obtém a URL
+
+    // Adiciona o produto ao Firestore
+    const docRef = await addDoc(collection(db, 'products'), {
+      name: product.name,
+      description: product.description,
+      price: parseFloat(product.price),
+      category: product.category,
+      imageUrl: imageUrl || '', // Se não houver URL, define como string vazia
+    });
+
+    setMessage('Produto adicionado com sucesso!');
+    setProduct({
+      name: '',
+      description: '',
+      price: '',
+      category: '',
+      image: null,
+    });
+  } catch (error) {
+    console.error('Erro ao adicionar produto: ', error);
+    setMessage('Erro ao adicionar produto. Tente novamente.');
+  }
+};
 
   return (
     <div className="add-product-container">
-      <h2>Cadastrar Produto</h2>
-      {message && <p className="message">{message}</p>}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="name">Nome do Produto:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={product.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="description">Descrição:</label>
-          <textarea
-            id="description"
-            name="description"
-            value={product.description}
-            onChange={handleChange}
-            required
-          ></textarea>
-        </div>
-        <div className="form-group">
-          <label htmlFor="price">Preço:</label>
-          <input
-            type="number"
-            id="price"
-            name="price"
-            value={product.price}
-            onChange={handleChange}
-            required
-            min="0"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="category">Categoria:</label>
-          <input
-            type="text"
-            id="category"
-            name="category"
-            value={product.category}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="image">Imagem:</label>
-          <input
-            type="file"
-            id="image"
-            onChange={handleFileChange}
-            accept="image/*"
-            required
-          />
-        </div>
-        <button type="submit">Adicionar Produto</button>
-      </form>
+      <h2 className="text-center">Cadastrar Produto</h2>
+      {uploadProgress > 0 && <p>Progresso do upload: {uploadProgress.toFixed(2)}%</p>} {/* Exibe o progresso do upload */}
+      <ProductForm
+        product={product}
+        onChange={handleChange}
+        onFileChange={handleFileChange}
+        onSubmit={handleSubmit}
+        message={message}
+      />
     </div>
   );
 };
