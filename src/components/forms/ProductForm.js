@@ -3,9 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importa o Bootstrap
 
-const ProductForm = ({ product, onChange, onFileChange, onSubmit, message }) => {
+const ProductForm = ({ product, onChange, onFileChange, message }) => {
   return (
-    <form onSubmit={onSubmit} className="product-form container mt-4">
+    <form className="product-form container mt-4">
       {message && <p className="alert alert-info">{message}</p>}
       
       <div className="form-group">
@@ -71,8 +71,6 @@ const ProductForm = ({ product, onChange, onFileChange, onSubmit, message }) => 
         />
         {product.image && <p className="mt-2">Arquivo selecionado: {product.image.name}</p>} {/* Exibe o nome do arquivo */}
       </div>
-      
-      <button type="submit" className="btn btn-primary">Adicionar Produto</button>
     </form>
   );
 };
@@ -87,7 +85,6 @@ ProductForm.propTypes = {
   }).isRequired,
   onChange: PropTypes.func.isRequired,
   onFileChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
   message: PropTypes.string,
 };
 

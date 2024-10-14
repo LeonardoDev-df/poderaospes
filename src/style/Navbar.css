@@ -1,46 +1,64 @@
 .custom-navbar {
   background-color: #f8f9fa;
+  padding: 0.5rem 1rem;
+}
+
+.logo-container {
+  margin-right: auto; /* Isso empurra os itens para o lado esquerdo */
+}
+
+.logo-image {
+  width: 40px; /* Ajuste o tamanho da imagem do logo */
+  height: 40px; /* Mantém a imagem em proporção */
+  object-fit: cover; /* Garante que a imagem fique bem dentro do círculo */
 }
 
 .custom-brand {
-  font-size: 24px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333; /* Cor do texto da marca */
+}
+
+.custom-navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
   font-weight: bold;
   color: #333;
 }
 
 .custom-link {
+  margin-right: 1rem;
   color: #333;
-  padding: 10px;
+  font-size: 1.1rem;
 }
 
 .custom-link:hover {
-  color: #e63946;
+  color: #007bff;
 }
 
-.custom-btn-login {
-  background-color: #e63946;
-  color: #fff;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
-  margin-left: 10px;
-}
-
-.custom-btn-login:hover {
-  background-color: #d62828;
-}
-
+.custom-btn-login,
 .custom-btn-logout {
-  background-color: #e63946;
-  color: #fff;
+  background-color: #007bff;
+  color: white;
   border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
-  margin-left: 10px;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
 }
 
+.custom-btn-login:hover,
 .custom-btn-logout:hover {
-  background-color: #d62828;
+  background-color: #0056b3;
 }
 
 .custom-cart-link {
@@ -49,8 +67,12 @@
 }
 
 .custom-cart-badge {
-  background-color: #e63946;
+  background-color: red;
   color: white;
-  padding: 3px 6px;
-  font-size: 12px;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  border-radius: 50%;
 }

@@ -33,7 +33,7 @@ const Cart = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="cart-container mt-5"> {/* Alterado para "cart-container" */}
       <h1 className="text-center mb-4">Carrinho</h1>
       {cartItems.length === 0 ? (
         <p className="text-center">Seu carrinho está vazio.</p>

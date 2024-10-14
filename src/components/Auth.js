@@ -4,7 +4,7 @@ import { auth } from '../data/firebaseConfig'; // Firebase authentication
 import { Container, Form, Button, Tab, Tabs } from 'react-bootstrap';
 import '../style/Auth.css'; // Importar o CSS para estilização
 import { useNavigate } from 'react-router-dom'; // Importar useNavigate
-import RegisterForm from './RegisterForm'; // Importar o componente RegisterForm
+import RegisterForm from '../components/forms/RegisterForm'; // Importar o componente RegisterForm
  
 const Auth = ({ onLogin }) => {
   const [email, setEmail] = useState('');

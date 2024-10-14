@@ -1,17 +1,18 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Importar useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, signOut } from 'firebase/auth';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
-import '../style/Navbar.css'; // Certifique-se de que o caminho do arquivo CSS está correto
-import 'bootstrap/dist/css/bootstrap.min.css'; // Bootstrap CSS
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Bootstrap JS
+import '../style/Navbar.css'; // Certifique-se de ter o arquivo CSS atualizado
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+// Importando a imagem local
+import logo from '../assets/logo.jpg'; // Caminho correto para a imagem
 
 const Navbar = ({ user }) => {
   const cartItems = 2; // Exemplo com 2 itens no carrinho
   const auth = getAuth();
-  const navigate = useNavigate(); // Inicializar o useNavigate
+  const navigate = useNavigate();
 
-  // Função de logout
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -25,12 +26,20 @@ const Navbar = ({ user }) => {
 
   return (
     <nav className="navbar navbar-expand-lg custom-navbar">
-      <div className="container custom-navbar-container">
-        <Link className="navbar-brand custom-brand" to="/">
-          Poder aos Pés
-        </Link>
+      <div className="container custom-navbar-container d-flex align-items-center justify-content-between">
+        <div className="d-flex align-items-center logo-container">
+          <img
+           src={logo} // Utilizando a imagem importada
+            alt=""
+            className="rounded-circle logo-image"
+          />
+          <Link className="navbar-brand custom-brand ms-2" to="/">
+            Poder aos Pés
+          </Link>
+        </div>
+
         <button
-          className="navbar-toggler custom-toggler"
+          className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
@@ -40,10 +49,8 @@ const Navbar = ({ user }) => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav me-auto"></ul>
-
-          <ul className="navbar-nav ms-auto">
+        <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul className="navbar-nav">
             <li className="nav-item">
               <Link className="nav-link custom-link" to="/">
                 Home
@@ -54,15 +61,11 @@ const Navbar = ({ user }) => {
                 Produtos
               </Link>
             </li>
-
-            {/* Link Sobre Nós adicionado */}
             <li className="nav-item">
               <Link className="nav-link custom-link" to="/about">
                 Sobre Nós
               </Link>
             </li>
-
-            {/* Verifica o email do usuário para exibir o link correto */}
             {user && user.email === 'adm@adm.com' ? (
               <li className="nav-item">
                 <Link className="nav-link custom-link" to="/add-product">
@@ -75,7 +78,7 @@ const Navbar = ({ user }) => {
                   <Link className="nav-link position-relative custom-cart-link" to="/cart">
                     <FaShoppingCart size={20} />
                     {cartItems > 0 && (
-                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-cart-badge">
+                      <span className="badge custom-cart-badge">
                         {cartItems}
                       </span>
                     )}
@@ -83,11 +86,9 @@ const Navbar = ({ user }) => {
                 </li>
               )
             )}
-
             {user ? (
               <>
                 <li className="nav-item">
-                  {/* Exibe o nome do usuário, se estiver definido */}
                   <span className="nav-link custom-link">
                     {user.displayName ? `Olá, ${user.displayName}` : 'Olá, Usuário'}
                   </span>

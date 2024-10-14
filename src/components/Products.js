@@ -1,41 +1,26 @@
-// src/components/Products.js
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
-import '../style/Products.css'; // Adicione um arquivo CSS para estilização, se necessário
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../data/firebaseConfig'; // Importa a configuração do Firebase
+import '../style/Products.css'; // Adicione um arquivo CSS para estilização
 
 const Products = () => {
   const [products, setProducts] = useState([]);
 
-  // Simulação de dados de produtos (você pode substituir isso pela chamada à API)
+  // Função para buscar produtos do Firestore
   const fetchProducts = async () => {
-    // Exemplo de dados estáticos
-    const sampleProducts = [
-      {
-        id: 1,
-        name: 'Produto 1',
-        price: 29.99,
-        image: 'https://via.placeholder.com/150',
-      },
-      {
-        id: 2,
-        name: 'Produto 2',
-        price: 49.99,
-        image: 'https://via.placeholder.com/150',
-      },
-      {
-        id: 3,
-        name: 'Produto 3',
-        price: 19.99,
-        image: 'https://via.placeholder.com/150',
-      },
-      {
-        id: 4,
-        name: 'Produto 4',
-        price: 99.99,
-        image: 'https://via.placeholder.com/150',
-      },
-    ];
-    setProducts(sampleProducts);
+    try {
+      const productsCollection = collection(db, 'products'); // Nome da coleção
+      const productSnapshot = await getDocs(productsCollection);
+      const productList = productSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      console.log("Produtos:", productList); // Log dos produtos para verificação
+      setProducts(productList);
+    } catch (error) {
+      console.error("Erro ao buscar produtos: ", error);
+    }
   };
 
   useEffect(() => {
@@ -48,14 +33,14 @@ const Products = () => {
       <Row>
         {products.map((product) => (
           <Col md={4} key={product.id} className="mb-4">
-            <Card>
-              <Card.Img variant="top" src={product.image} />
+            <Card className="product-card">
+              <Card.Img variant="top" src={product.imageUrl} className="product-image" />
               <Card.Body>
-                <Card.Title>{product.name}</Card.Title>
-                <Card.Text>
+                <Card.Title className="product-name">{product.name}</Card.Title>
+                <Card.Text className="product-price">
                   Preço: R$ {product.price.toFixed(2)}
                 </Card.Text>
-                <button className="btn btn-primary">Adicionar ao Carrinho</button>
+                <button className="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
               </Card.Body>
             </Card>
           </Col>
