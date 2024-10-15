@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Col, Row, Modal, Button, Form } from 'react-bootstrap';
+import { Card, Col, Row, Modal, Button, Form, Alert } from 'react-bootstrap';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom'; // Para redirecionamento
 import { db, auth } from '../data/firebaseConfig'; // Importa a configuração do Firebase
 import '../style/Products.css'; // Adicione um arquivo CSS para estilização
 
@@ -11,6 +12,8 @@ const Products = () => {
   const [showEditModal, setShowEditModal] = useState(false); // Controle do modal de edição
   const [showDeleteModal, setShowDeleteModal] = useState(false); // Controle do modal de exclusão
   const [currentProduct, setCurrentProduct] = useState(null); // Produto atual a ser editado/excluído
+  const [showAlert, setShowAlert] = useState(false); // Alerta para login
+  const navigate = useNavigate(); // Redirecionamento
 
   // Função para buscar produtos do Firestore
   const fetchProducts = async () => {
@@ -82,9 +85,41 @@ const Products = () => {
     }
   };
 
+  // Função para adicionar o item ao carrinho ou redirecionar para login se não estiver logado
+  const handleAddToCart = (product) => {
+    if (!userEmail) {
+      // Se o usuário não estiver logado, exibe o alerta e redireciona para a tela de login
+      setShowAlert(true);
+      setTimeout(() => {
+        navigate('/auth'); // Redireciona para a página de login após um tempo
+      }, 3000); // 3 segundos antes de redirecionar
+    } else {
+      // Lógica para adicionar ao carrinho
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingProduct = cart.find(item => item.id === product.id);
+
+      if (existingProduct) {
+        existingProduct.quantity += 1; // Aumenta a quantidade se o produto já estiver no carrinho
+      } else {
+        cart.push({ ...product, quantity: 1 }); // Adiciona o produto ao carrinho com quantidade 1
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      console.log(`Produto ${product.name} adicionado ao carrinho.`);
+    }
+  };
+
   return (
     <div className="container mt-5">
       <h1 className="text-center mb-4">Produtos</h1>
+
+      {/* Alerta para usuários não logados */}
+      {showAlert && (
+        <Alert variant="danger" onClose={() => setShowAlert(false)} dismissible>
+          Por favor, faça login para adicionar itens ao carrinho. Redirecionando para a página de login...
+        </Alert>
+      )}
+
       <Row>
         {products.map((product) => (
           <Col md={4} key={product.id} className="mb-4">
@@ -111,7 +146,12 @@ const Products = () => {
                     </Button>
                   </>
                 ) : (
-                  <Button className="btn btn-primary add-to-cart">Adicionar ao Carrinho</Button>
+                  <Button 
+                    className="btn btn-primary add-to-cart" 
+                    onClick={() => handleAddToCart(product)}
+                  >
+                    Adicionar ao Carrinho
+                  </Button>
                 )}
               </Card.Body>
             </Card>

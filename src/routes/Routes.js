@@ -7,6 +7,7 @@ import Cart from '../components/Cart'; // Importar seu componente de Carrinho
 import Auth from '../components/Auth'; // Importar seu componente de Autenticação
 import NotFound from '../components/NotFound'; // Importar seu componente para página não encontrada
 import Navbar from '../components/Navbar'; // Importar seu componente Navbar
+import About from '../components/About'; // Importar seu componente About
 import { getAuth, onAuthStateChanged } from 'firebase/auth'; // Importar funções do Firebase
 
 const AppRoutes = () => { // Renomeie o componente aqui
@@ -34,6 +35,7 @@ const AppRoutes = () => { // Renomeie o componente aqui
         <Route path="/add-product" element={<AddProduct />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/auth" element={<Auth onLogin={handleLogin} />} /> {/* Passar a função de login */}
+        <Route path="/About" element={<About />} />
         {/* Rota para páginas não encontradas */}
         <Route path="*" element={<NotFound />} />
       </RouterRoutes>

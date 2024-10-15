@@ -5,6 +5,7 @@ import { Container, Form, Button, Tab, Tabs } from 'react-bootstrap';
 import '../style/Auth.css';
 import { useNavigate } from 'react-router-dom';
 import RegisterForm from '../components/forms/RegisterForm';
+import { Alert } from 'react-bootstrap';
 
 const Auth = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -12,20 +13,28 @@ const Auth = ({ onLogin }) => {
   const [error, setError] = useState('');
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertVariant, setAlertVariant] = useState(''); // 'success' ou 'danger' para estilo do alerta
+
 
   // Função de login
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
+    setShowAlert(false); // Esconde qualquer alerta anterior
+  
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
-      // Exibe um alert ao fazer login com sucesso
-      alert('Login realizado com sucesso!');
-
+  
+      // Exibe um alerta de sucesso ao fazer login
+      setAlertMessage('Login realizado com sucesso!');
+      setAlertVariant('success');
+      setShowAlert(true);
+  
       onLogin(user); // Chama a função de callback com o usuário
-
+  
       // Verificar se o e-mail é "adm@adm.com" e redirecionar adequadamente
       if (user.email === 'adm@adm.com') {
         navigate('/add-product'); // Redireciona para a página de adicionar produto
@@ -34,13 +43,25 @@ const Auth = ({ onLogin }) => {
       }
     } catch (error) {
       setError('Erro ao fazer login: ' + error.message);
+      setAlertMessage('Erro ao fazer login: ' + error.message);
+      setAlertVariant('danger');
+      setShowAlert(true);
     }
   };
+  
 
   return (
     <Container className="auth-container mt-5">
       <div className="auth-card">
         <h1 className="auth-title">Bem-vinda à Sua Loja de Calçados!</h1>
+        
+        {/* Alerta de sucesso ou erro */}
+        {showAlert && (
+          <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
+            {alertMessage}
+          </Alert>
+        )}
+  
         <Tabs
           activeKey={isLogin ? 'login' : 'register'}
           onSelect={(k) => setIsLogin(k === 'login')}
@@ -83,6 +104,7 @@ const Auth = ({ onLogin }) => {
       </div>
     </Container>
   );
+  
 };
 
 export default Auth;
