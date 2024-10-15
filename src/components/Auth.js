@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword, } from 'firebase/auth'; // Importe o método updateProfile
-import { auth } from '../data/firebaseConfig'; // Firebase authentication
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../data/firebaseConfig';
 import { Container, Form, Button, Tab, Tabs } from 'react-bootstrap';
-import '../style/Auth.css'; // Importar o CSS para estilização
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate
-import RegisterForm from '../components/forms/RegisterForm'; // Importar o componente RegisterForm
- 
+import '../style/Auth.css';
+import { useNavigate } from 'react-router-dom';
+import RegisterForm from '../components/forms/RegisterForm';
+
 const Auth = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [isLogin, setIsLogin] = useState(true); // Alternar entre login e registro
-  const navigate = useNavigate(); // Inicializar o useNavigate
+  const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
 
   // Função de login
   const handleLogin = async (e) => {
@@ -19,9 +19,11 @@ const Auth = ({ onLogin }) => {
     setError('');
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user; // Obter o usuário
+      const user = userCredential.user;
 
+      // Exibe um alert ao fazer login com sucesso
       alert('Login realizado com sucesso!');
+
       onLogin(user); // Chama a função de callback com o usuário
 
       // Verificar se o e-mail é "adm@adm.com" e redirecionar adequadamente
@@ -75,7 +77,7 @@ const Auth = ({ onLogin }) => {
             </Form>
           </Tab>
           <Tab eventKey="register" title="Registrar">
-            <RegisterForm onRegister={onLogin} /> {/* Usar o componente de registro separado */}
+            <RegisterForm onRegister={onLogin} />
           </Tab>
         </Tabs>
       </div>

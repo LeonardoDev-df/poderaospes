@@ -65,3 +65,17 @@
     margin-top: -10px;
   }
   
+
+  /* Auth.css */
+
+.modal-content {
+  border-radius: 10px; /* Cantos arredondados do modal */
+}
+
+.modal-header {
+  background-color: #f8f9fa; /* Cor de fundo do cabeçalho do modal */
+}
+
+.modal-title {
+  color: #333; /* Cor do título do modal */
+}

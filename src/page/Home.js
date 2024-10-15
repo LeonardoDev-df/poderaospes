@@ -1,57 +1,66 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore'; // Funções para buscar os dados no Firestore
+import { db } from '../data/firebaseConfig'; // Importa a configuração do Firebase
+import { Card, Col, Row } from 'react-bootstrap'; // Componentes do react-bootstrap
 import '../style/Home.css'; // Importa o arquivo CSS para estilização
 
-const products = [
-  {
-    id: 1,
-    name: 'Sandália Elegante',
-    image: 'https://source.unsplash.com/200x200/?sandal',
-    price: 'R$ 79,99',
-    description: 'Uma sandália elegante para qualquer ocasião.',
-  },
-  {
-    id: 2,
-    name: 'Rasteirinha Colorida',
-    image: 'https://source.unsplash.com/200x200/?flip-flop',
-    price: 'R$ 49,99',
-    description: 'Confortável e perfeita para o verão.',
-  },
-  {
-    id: 3,
-    name: 'Sandália Casual',
-    image: 'https://source.unsplash.com/200x200/?shoes',
-    price: '89,99',
-    description: 'Perfeita para o dia a dia.',
-  },
-  {
-    id: 4,
-    name: 'Rasteirinha Básica',
-    image: 'https://source.unsplash.com/200x200/?flip-flops',
-    price: '39,99',
-    description: 'Estilo e conforto para suas atividades diárias.',
-  },
-];
-
 const Home = () => {
+  const [products, setProducts] = useState([]); // Estado para armazenar os produtos
+  const [loading, setLoading] = useState(true); // Estado para indicar carregamento
+
+  // useEffect para buscar os produtos do Firestore ao carregar o componente
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const productsCollection = collection(db, 'products'); // Nome da coleção no Firestore
+        const productSnapshot = await getDocs(productsCollection);
+        const productList = productSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setProducts(productList); // Atualiza o estado com os produtos do Firestore
+        setLoading(false); // Desativa o estado de carregamento
+      } catch (error) {
+        console.error('Erro ao buscar produtos:', error);
+        setLoading(false); // Mesmo em caso de erro, desativa o estado de carregamento
+      }
+    };
+
+    fetchProducts(); // Chama a função de busca
+  }, []); // O array vazio faz o useEffect rodar apenas uma vez após o componente ser montado
+
   return (
     <div className="home-container">
       <div className="hero-section">
         <h1 className="hero-title">Bem-vindo à loja Poder aos Pés</h1>
         <p className="hero-subtitle">Explore nossos produtos de calçados femininos!</p>
-        <button className="hero-button">Ver Produtos</button>
+        
       </div>
+
       <div className="featured-products">
         <h2 className="section-title">Produtos em Destaque</h2>
-        <div className="product-list">
-          {products.map((product) => (
-            <div className="product-card" key={product.id}>
-              <img className="product-image" src={product.image} alt={product.name} />
-              <h3 className="product-name">{product.name}</h3>
-              <p className="product-price">{product.price}</p>
-              <p className="product-description">{product.description}</p>
-            </div>
-          ))}
-        </div>
+        {loading ? (
+          <p>Carregando produtos...</p> // Exibe uma mensagem de carregamento enquanto os produtos não são carregados
+        ) : (
+          <Row>
+            {products.map((product) => (
+              <Col md={4} key={product.id} className="mb-4">
+                <Card className="product-card">
+                  <Card.Img variant="top" src={product.imageUrl} className="product-image" alt={product.name} />
+                  <Card.Body>
+                    <Card.Title className="product-name">{product.name}</Card.Title>
+                    <Card.Text className="product-price">
+                      Preço: R$ {product.price.toFixed(2)}
+                    </Card.Text>
+                    <Card.Text className="product-description">
+                      {product.description}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        )}
       </div>
     </div>
   );
