@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'; // Para redirecionamento
 import { db, auth } from '../data/firebaseConfig'; // Importa a configuração do Firebase
 import '../style/Products.css'; // Adicione um arquivo CSS para estilização
 
-const Products = () => {
+const Products = ({ updateCartCount }) => {
   const [products, setProducts] = useState([]);
   const [userEmail, setUserEmail] = useState(null); // Estado para armazenar o e-mail do usuário
   const [showEditModal, setShowEditModal] = useState(false); // Controle do modal de edição
@@ -16,6 +16,14 @@ const Products = () => {
   const [showAlerts, setShowAlerts] = useState(false);
   const [showModals, setShowModals] = useState(false);
   const navigate = useNavigate(); // Redirecionamento
+  const [cartCount, setCartCount] = useState(0);
+
+
+   // Carregar contagem de itens no carrinho ao montar o componente
+   useEffect(() => {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    setCartCount(cart.reduce((total, item) => total + item.quantity, 0));
+  }, []);
 
   // Função para buscar produtos do Firestore
   const fetchProducts = async () => {
@@ -96,29 +104,30 @@ const Products = () => {
         navigate('/auth'); // Redireciona para a página de login após 3 segundos
       }, 3000);
     } else {
-      try {
-        // Recupera o carrinho do localStorage, ou inicializa um array vazio se estiver vazio
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const existingProduct = cart.find(item => item.id === product.id);
-  
-        if (existingProduct) {
-          existingProduct.quantity += 1; // Aumenta a quantidade se o produto já estiver no carrinho
-        } else {
-          cart.push({ ...product, quantity: 1 }); // Adiciona o produto ao carrinho com quantidade 1
-        }
-  
-        // Atualiza o localStorage com o novo carrinho
-        localStorage.setItem('cart', JSON.stringify(cart));
-        console.log(`Produto ${product.name} adicionado ao carrinho.`);
-        
-        // Define o currentProduct e exibe o modal após adicionar ao carrinho
-        setCurrentProduct(product); // Adicione esta linha
-        setShowModals(true);
-      } catch (error) {
-        console.error('Erro ao adicionar produto ao carrinho:', error);
+    try {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingProduct = cart.find(item => item.id === product.id);
+
+      if (existingProduct) {
+        existingProduct.quantity += 1;
+      } else {
+        cart.push({ ...product, quantity: 1 });
       }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      // Atualiza a contagem do carrinho
+      const newCartCount = cart.reduce((total, item) => total + item.quantity, 0);
+      setCartCount(newCartCount);
+
+      console.log(`Produto ${product.name} adicionado ao carrinho.`);
+      setCurrentProduct(product);
+      setShowModals(true);
+    } catch (error) {
+      console.error('Erro ao adicionar produto ao carrinho:', error);
     }
-  };
+  }
+};
   
 
   // Fechar modal

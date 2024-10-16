@@ -67,13 +67,33 @@
   color: #333;
 }
 
+/* Exemplo de CSS para o badge do carrinho */
 .custom-cart-badge {
-  background-color: red;
-  color: white;
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
   position: absolute;
-  top: -5px;
+  top: -10px;
   right: -10px;
+  background-color: red; /* Cor de fundo do badge */
+  color: white; /* Cor do texto do badge */
   border-radius: 50%;
+  padding: 2px 5px;
+  font-size: 12px;
+}
+
+/* Outras classes personalizadas */
+.custom-navbar {
+  background-color: #fff; /* Cor de fundo da navbar */
+}
+
+.custom-navbar-container {
+  max-width: 1200px; /* Largura máxima do contêiner da navbar */
+  margin: auto; /* Centraliza o contêiner */
+}
+
+.custom-link {
+  color: #333; /* Cor dos links */
+}
+
+.custom-btn-login, .custom-btn-logout {
+  background-color: #007bff; /* Cor de fundo do botão */
+  color: white; /* Cor do texto do botão */
 }

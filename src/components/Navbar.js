@@ -1,15 +1,17 @@
+// src/components/Navbar.js
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, signOut } from 'firebase/auth';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
+import { useCart } from '../context/CartContext'; // Importe o contexto
 import '../style/Navbar.css'; // Certifique-se de ter o arquivo CSS atualizado
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-// Importando a imagem local
 import logo from '../assets/logo.jpg'; // Caminho correto para a imagem
 
 const Navbar = ({ user }) => {
-  const cartItems = 2; // Exemplo com 2 itens no carrinho
+  const { cartItems } = useCart(); // Obtenha os itens do carrinho do contexto
   const auth = getAuth();
   const navigate = useNavigate();
 
@@ -29,8 +31,8 @@ const Navbar = ({ user }) => {
       <div className="container custom-navbar-container d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center logo-container">
           <img
-           src={logo} // Utilizando a imagem importada
-            alt=""
+            src={logo}
+            alt="Logo"
             className="rounded-circle logo-image"
           />
           <Link className="navbar-brand custom-brand ms-2" to="/">
@@ -49,6 +51,7 @@ const Navbar = ({ user }) => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
+
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
@@ -75,7 +78,7 @@ const Navbar = ({ user }) => {
             ) : (
               user && (
                 <li className="nav-item">
-                  <Link className="nav-link position-relative custom-cart-link" to="/cart">
+                  <Link className="nav-link position-relative custom-cart-link" to="/cart" aria-label="Carrinho">
                     <FaShoppingCart size={20} />
                     {cartItems > 0 && (
                       <span className="badge custom-cart-badge">
@@ -101,7 +104,7 @@ const Navbar = ({ user }) => {
               </>
             ) : (
               <li className="nav-item">
-                <Link className="btn custom-btn-login" to="/auth">
+                <Link className="btn custom-btn-login" to="/auth" aria-label="Login">
                   <FaUser className="me-1" /> Login
                 </Link>
               </li>
