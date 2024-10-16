@@ -13,6 +13,8 @@ const Products = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false); // Controle do modal de exclusão
   const [currentProduct, setCurrentProduct] = useState(null); // Produto atual a ser editado/excluído
   const [showAlert, setShowAlert] = useState(false); // Alerta para login
+  const [showAlerts, setShowAlerts] = useState(false);
+  const [showModals, setShowModals] = useState(false);
   const navigate = useNavigate(); // Redirecionamento
 
   // Função para buscar produtos do Firestore
@@ -88,26 +90,46 @@ const Products = () => {
   // Função para adicionar o item ao carrinho ou redirecionar para login se não estiver logado
   const handleAddToCart = (product) => {
     if (!userEmail) {
-      // Se o usuário não estiver logado, exibe o alerta e redireciona para a tela de login
+      // Exibe alerta se o usuário não estiver logado e redireciona para a tela de login
       setShowAlert(true);
       setTimeout(() => {
-        navigate('/auth'); // Redireciona para a página de login após um tempo
-      }, 3000); // 3 segundos antes de redirecionar
+        navigate('/auth'); // Redireciona para a página de login após 3 segundos
+      }, 3000);
     } else {
-      // Lógica para adicionar ao carrinho
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const existingProduct = cart.find(item => item.id === product.id);
-
-      if (existingProduct) {
-        existingProduct.quantity += 1; // Aumenta a quantidade se o produto já estiver no carrinho
-      } else {
-        cart.push({ ...product, quantity: 1 }); // Adiciona o produto ao carrinho com quantidade 1
+      try {
+        // Recupera o carrinho do localStorage, ou inicializa um array vazio se estiver vazio
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existingProduct = cart.find(item => item.id === product.id);
+  
+        if (existingProduct) {
+          existingProduct.quantity += 1; // Aumenta a quantidade se o produto já estiver no carrinho
+        } else {
+          cart.push({ ...product, quantity: 1 }); // Adiciona o produto ao carrinho com quantidade 1
+        }
+  
+        // Atualiza o localStorage com o novo carrinho
+        localStorage.setItem('cart', JSON.stringify(cart));
+        console.log(`Produto ${product.name} adicionado ao carrinho.`);
+        
+        // Define o currentProduct e exibe o modal após adicionar ao carrinho
+        setCurrentProduct(product); // Adicione esta linha
+        setShowModals(true);
+      } catch (error) {
+        console.error('Erro ao adicionar produto ao carrinho:', error);
       }
-
-      localStorage.setItem('cart', JSON.stringify(cart));
-      console.log(`Produto ${product.name} adicionado ao carrinho.`);
     }
   };
+  
+
+  // Fechar modal
+  const handleCloseModal = () => setShowModals(false);
+
+  // Redirecionar para o carrinho para finalizar a compra
+  const handleProceedToCheckout = () => {
+    setShowModals(false);
+    navigate('/cart'); // Altere o caminho conforme sua rota de finalização de compra
+  };
+
 
   return (
     <div className="container mt-5">
@@ -158,6 +180,27 @@ const Products = () => {
           </Col>
         ))}
       </Row>
+
+      {/* Modal de confirmação */}
+      <Modal show={showModals} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Produto Adicionado ao Carrinho</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          O produto "{currentProduct?.name}" foi adicionado ao seu carrinho. Deseja continuar comprando ou finalizar a compra?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Continuar Comprando
+          </Button>
+          <Button variant="primary" onClick={handleProceedToCheckout}>
+            Finalizar Compra
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+       {/* Alerta de redirecionamento para login */}
+       {showAlert && <p>Você precisa estar logado. Redirecionando para a página de login...</p>}
 
       {/* Modal de Edição */}
       <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
