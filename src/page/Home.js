@@ -3,6 +3,7 @@ import { collection, getDocs } from 'firebase/firestore'; // Funções para busc
 import { db } from '../data/firebaseConfig'; // Importa a configuração do Firebase
 import { Card, Col, Row } from 'react-bootstrap'; // Componentes do react-bootstrap
 import '../style/Home.css'; // Importa o arquivo CSS para estilização
+import Footer from '../components/Footer'; // Importando o Footer
 
 const Home = () => {
   const [products, setProducts] = useState([]); // Estado para armazenar os produtos
@@ -34,7 +35,6 @@ const Home = () => {
       <div className="hero-section">
         <h1 className="hero-title">Bem-vindo à loja Poder aos Pés</h1>
         <p className="hero-subtitle">Explore nossos produtos de calçados femininos!</p>
-        
       </div>
 
       <div className="featured-products">
@@ -62,6 +62,8 @@ const Home = () => {
           </Row>
         )}
       </div>
+
+      <Footer /> {/* Adicionando o Footer aqui */}
     </div>
   );
 };

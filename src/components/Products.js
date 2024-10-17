@@ -5,6 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom'; // Para redirecionamento
 import { db, auth } from '../data/firebaseConfig'; // Importa a configuração do Firebase
 import '../style/Products.css'; // Adicione um arquivo CSS para estilização
+import Footer from './Footer'; // Importando o Footer
 
 const Products = ({ updateCartCount }) => {
   const [products, setProducts] = useState([]);
@@ -275,8 +276,15 @@ const Products = ({ updateCartCount }) => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+     { /* Footer será renderizado aqui */}
+    <Footer /> 
     </div>
+
+    
   );
+
+ 
 };
 
 export default Products;
