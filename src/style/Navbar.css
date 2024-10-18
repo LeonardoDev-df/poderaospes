@@ -1,99 +1,129 @@
+/* Paleta de Cores */
+:root {
+  --cor-primaria: #D1C4E9; /* Lavanda clara */
+  --cor-secundaria: #26cca5; /* Verde água suave */
+
+  --cor-neutra: #F0F0F0; /* Cinza claro */
+  --cor-acento: #FFC107; /* Dourado mais suave */
+  --cor-neutra-fundo: #FAFAFA; /* Branco gelo */
+  --cor-texto: #444; /* Texto levemente escurecido */
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--cor-neutra-fundo); /* Fundo suave */
+  color: var(--cor-texto); /* Texto sutil */
+}
+
+/* Estilização da Navbar */
 .custom-navbar {
-  background-color: #f8f9fa;
-  padding: 0.5rem 1rem;
-}
-
-.logo-container {
-  margin-right: auto; /* Isso empurra os itens para o lado esquerdo */
-}
-
-.logo-image {
-  width: 40px; /* Ajuste o tamanho da imagem do logo */
-  height: 40px; /* Mantém a imagem em proporção */
-  object-fit: cover; /* Garante que a imagem fique bem dentro do círculo */
-}
-
-.custom-brand {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333; /* Cor do texto da marca */
+  background-color: var(--cor-primaria); /* Cor mais discreta para a navbar */
+  padding: 0.75rem 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra leve */
 }
 
 .custom-navbar-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.logo-container {
+  margin-right: auto;
 }
 
 .logo-image {
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   object-fit: cover;
 }
 
 .navbar-brand {
-  font-family: 'Playfair Display', serif; /* Fonte elegante */
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--cor-texto); /* Texto mais discreto */
+  transition: color 0.3s;
+}
+
+.navbar-brand:hover {
+  color: var(--cor-acento); /* Dourado discreto no hover */
 }
 
 .custom-link {
   margin-right: 1rem;
-  color: #333;
-  font-size: 1.1rem;
+  color: var(--cor-texto);
+  font-size: 1.05rem;
+  transition: color 0.3s;
 }
 
 .custom-link:hover {
-  color: #007bff;
+  color: var(--cor-acento); /* Destaque suave no hover */
 }
 
-.custom-btn-login,
-.custom-btn-logout {
-  background-color: #007bff;
+/* Botões de Login/Logout */
+.custom-btn-login, .custom-btn-logout {
+  background-color: var(--cor-secundaria); /* Verde água suave */
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.3rem;
+  transition: background-color 0.3s;
 }
 
-.custom-btn-login:hover,
-.custom-btn-logout:hover {
-  background-color: #0056b3;
+.custom-btn-login:hover, .custom-btn-logout:hover {
+  background-color: #8ce6d5; /* Tom mais escuro no hover */
 }
 
+/* Carrinho de Compras */
 .custom-cart-link {
   position: relative;
-  color: #333;
+  color: var(--cor-texto);
 }
 
-/* Exemplo de CSS para o badge do carrinho */
 .custom-cart-badge {
   position: absolute;
-  top: -10px;
-  right: -10px;
-  background-color: red; /* Cor de fundo do badge */
-  color: white; /* Cor do texto do badge */
+  top: -8px;
+  right: -8px;
+  background-color: #FF8A65; /* Tom mais suave de laranja */
+  color: white;
   border-radius: 50%;
-  padding: 2px 5px;
+  padding: 3px 6px;
   font-size: 12px;
 }
 
-/* Outras classes personalizadas */
-.custom-navbar {
-  background-color: #fff; /* Cor de fundo da navbar */
+/* Banner rotativo */
+.custom-banner {
+  background-color: var(--cor-primaria); /* Lavanda clara */
+  color: var(--cor-neutra); /* Texto branco */
+  padding: 2rem;
+  text-align: center;
+  font-family: 'Playfair Display', serif;
 }
 
-.custom-navbar-container {
-  max-width: 1200px; /* Largura máxima do contêiner da navbar */
-  margin: auto; /* Centraliza o contêiner */
+/* Seções de produtos */
+.product-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 2rem;
+  background-color: var(--cor-neutra-fundo);
 }
 
-.custom-link {
-  color: #333; /* Cor dos links */
+/* Rodapé */
+.custom-footer {
+  background-color: var(--cor-secundaria); /* Fundo suave */
+  color: var(--cor-neutra); /* Texto branco */
+  padding: 1.5rem;
+  text-align: center;
 }
 
-.custom-btn-login, .custom-btn-logout {
-  background-color: #007bff; /* Cor de fundo do botão */
-  color: white; /* Cor do texto do botão */
+.custom-footer a {
+  color: var(--cor-acento); /* Links em dourado suave */
+  text-decoration: none;
+}
+
+.custom-footer a:hover {
+  text-decoration: underline;
 }

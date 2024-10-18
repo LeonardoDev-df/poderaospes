@@ -2,7 +2,7 @@
 
 .about-container {
   padding: 20px;
-  max-width: 800px;
+  width: 100%;
   margin: auto;
   background-color: #F5F5F5; /* Cinza claro para o fundo */
   border-radius: 10px;
@@ -25,9 +25,11 @@
 }
 
 .about-content {
-  display: flex;
+  display: block;
   flex-direction: column;
-  gap: 15px;
+  margin: 0 auto 20px;
+  width: 75%; /* Ajuste conforme necessário */
+  border-radius: 20px;
 }
 
 .about-image {
@@ -36,6 +38,16 @@
   border-radius: 20px;
   margin: 10px 0; /* Margem para separar imagens */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para efeito */
+  padding-left: 20px;
+}
+
+.about-images {
+  width: 10%; /* Ajusta a largura da imagem para ocupar 100% do espaço disponível */
+  height: 20%;
+  border-radius: 20px;
+  margin: 10px 0; /* Margem para separar imagens */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para efeito */
+  padding-left: 20px;
 }
 
 .about-text {
@@ -53,6 +65,21 @@
   display: flex;
   flex-direction: column; /* Permite que a imagem e o texto se empilhem em telas menores */
   align-items: center; /* Alinha verticalmente os itens */
+  justify-content: space-evenly;
+
+}
+
+.about-storys {
+  display: flex;
+  align-items: center; /* Alinha verticalmente os itens */
+  justify-content: space-evenly;
+
+}
+
+.about-storys img {
+  width: 10% !important; /* Ajusta a largura da imagem da história para 100% */
+
+  margin-bottom: 10px; /* Espaço entre a imagem e o texto */
 }
 
 .about-story img {
@@ -76,6 +103,16 @@
     margin-right: 20px; /* Espaço entre a imagem e o texto */
   }
 
+  .about-storys {
+    flex-direction: row; /* Muda para coluna em telas maiores */
+  }
+
+  .about-storys img {
+    width: 40%; /* Ajusta a largura da imagem da história */
+    margin-right: 20px; /* Espaço entre a imagem e o texto */
+  }
+
+
   .about-text, .about-texte {
     font-size: 1.2rem; /* Aumenta o tamanho da fonte em telas maiores */
   }
@@ -92,5 +129,14 @@
 
   .about-logo {
     width: 100px; /* Ajusta a largura do logo em telas menores */
+  }
+
+  .about-storys {
+    flex-direction: column; /* Muda para coluna em telas maiores */
+  }
+
+  .about-storys img {
+    width: 60% !important; /* Ajusta a largura da imagem da história */
+    margin-right: 20px; /* Espaço entre a imagem e o texto */
   }
 }

@@ -142,7 +142,7 @@ const Products = ({ updateCartCount }) => {
 
 
   return (
-    <div className="container mt-5">
+    <div className="product-container">
       <h1 className="text-center mb-4">Produtos</h1>
 
       {/* Alerta para usuários não logados */}

@@ -1,9 +1,9 @@
 /* src/style/Products.css */
-.container {
-  max-width: 1200px; /* Define uma largura máxima para o container */
+.product-container {
+  width: 100%; /* Define uma largura máxima para o container */
   margin: 0 auto; /* Centraliza o container */
   padding: 20px; /* Adiciona padding para melhor espaçamento */
-  
+  background-color: #F5F5F5;
 }
 
 .product-card {

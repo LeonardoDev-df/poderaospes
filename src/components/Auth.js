@@ -6,6 +6,7 @@ import '../style/Auth.css';
 import { useNavigate } from 'react-router-dom';
 import RegisterForm from '../components/forms/RegisterForm';
 import { Alert } from 'react-bootstrap';
+import Footer from './Footer'; // Importando o Footer
 
 const Auth = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -51,7 +52,8 @@ const Auth = ({ onLogin }) => {
   
 
   return (
-    <Container className="auth-container mt-5">
+    <>
+      <Container className="auth-container mt-5">
       <div className="auth-card">
         <h1 className="auth-title">Bem-vinda à Sua Loja de Calçados!</h1>
         
@@ -103,6 +105,10 @@ const Auth = ({ onLogin }) => {
         </Tabs>
       </div>
     </Container>
+    { /* Footer será renderizado aqui */}
+    <Footer /> 
+    </>
+  
   );
   
 };
