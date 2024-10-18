@@ -4,7 +4,7 @@ import { setDoc, doc } from 'firebase/firestore'; // Firestore imports
 import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../../data/firebaseConfig'; // Firebase authentication and Firestore
-
+import '../../style/Register.css';
 
 const RegisterForm = ({ onRegister }) => {
   const [email, setEmail] = useState('');
@@ -150,7 +150,7 @@ const RegisterForm = ({ onRegister }) => {
         />
       </Form.Group>
       {error && <p className="text-danger">{error}</p>}
-      <Button variant="success" type="submit" className="auth-btn mt-3">
+      <Button variant="success" type="submit" className="register-btn mt-3">
         Registrar
       </Button>
     </Form>

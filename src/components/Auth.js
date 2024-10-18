@@ -94,7 +94,7 @@ const Auth = ({ onLogin }) => {
                 />
               </Form.Group>
               {error && <p className="text-danger">{error}</p>}
-              <Button variant="primary" type="submit" className="auth-btn mt-3">
+              <Button variant="primary" type="submit" className="login-btn mt-3">
                 Entrar
               </Button>
             </Form>

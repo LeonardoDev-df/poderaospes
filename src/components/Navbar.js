@@ -78,7 +78,8 @@ const Navbar = ({ user }) => {
             ) : (
               user && (
                 <li className="nav-item">
-                  <Link className="nav-link position-relative custom-cart-link" to="/cart" aria-label="Carrinho">
+                  <Link className="nav-link custom-link" to="/cart" aria-label="Carrinho">              
+                    Carrinho
                     <FaShoppingCart size={20} />
                     {cartItems > 0 && (
                       <span className="badge custom-cart-badge">

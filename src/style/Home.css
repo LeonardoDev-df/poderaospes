@@ -11,7 +11,7 @@
   background-position: center;
   color: white;
   border-radius: 8px;
-  margin-bottom: 5px;
+  margin-bottom: 20px; /* Aumentado para mais espaçamento */
   position: relative; /* Para o pseudo-elemento */
 }
 
@@ -39,26 +39,7 @@
   font-size: 24px; /* Aumenta o tamanho da fonte do subtítulo */
   margin-bottom: 20px;
   z-index: 2; /* Coloca o texto acima do fundo */
- color: #c08e8e;
-}
-
-.hero-button {
-  background-color: #FAB1B1; /* Cor do botão */
-  color: white;
-  border: none;
-  padding: 12px 24px; /* Ajusta o padding para um botão maior */
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: bold; /* Adiciona peso ao texto do botão */
-  text-transform: uppercase; /* Transforma o texto do botão em maiúsculas */
-  z-index: 2; /* Coloca o botão acima do fundo */
-  transition: background-color 0.3s; /* Transição suave para hover */
-}
-
-.hero-button:hover {
-  background-color: #E1BEE7; /* Efeito hover */
-  transform: scale(1.05); /* Efeito de leve aumento ao passar o mouse */
+  color: #c08e8e;
 }
 
 .featured-products {
@@ -116,6 +97,27 @@
   margin: 0; /* Remove margem para manter o card compacto */
 }
 
+/* Adicionando estilo para as bolinhas de cores disponíveis */
+.product-colors {
+  display: flex;
+  justify-content: center;
+  margin-top: 5px; /* Espaçamento entre a descrição e as cores */
+}
+
+.color-bullets {
+  display: flex; /* Usando flexbox para as bolinhas de cor */
+  justify-content: center; /* Centralizando as bolinhas */
+  margin-top: 5px; /* Espaço acima das bolinhas */
+}
+
+.color-bullet {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%; /* Fazendo a bolinha redonda */
+  margin: 0 5px; /* Espaçamento entre as bolinhas */
+  border: 1px solid #ccc; /* Borda leve para destaque */
+}
+
 .card-img, .card-img-bottom, .card-img-top {
-  width: 61% !important;
+  width: 61% !important; /* Ajuste de largura para imagem */
 }

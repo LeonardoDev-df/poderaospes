@@ -1,34 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore'; // Funções para buscar os dados no Firestore
-import { db } from '../data/firebaseConfig'; // Importa a configuração do Firebase
-import { Card, Col, Row } from 'react-bootstrap'; // Componentes do react-bootstrap
-import '../style/Home.css'; // Importa o arquivo CSS para estilização
-import Footer from '../components/Footer'; // Importando o Footer
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../data/firebaseConfig';
+import { Card, Col, Row } from 'react-bootstrap';
+import '../style/Home.css';
+import Footer from '../components/Footer';
 
 const Home = () => {
-  const [products, setProducts] = useState([]); // Estado para armazenar os produtos
-  const [loading, setLoading] = useState(true); // Estado para indicar carregamento
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // useEffect para buscar os produtos do Firestore ao carregar o componente
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const productsCollection = collection(db, 'products'); // Nome da coleção no Firestore
+        const productsCollection = collection(db, 'products');
         const productSnapshot = await getDocs(productsCollection);
         const productList = productSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setProducts(productList); // Atualiza o estado com os produtos do Firestore
-        setLoading(false); // Desativa o estado de carregamento
+        setProducts(productList);
+        setLoading(false);
       } catch (error) {
         console.error('Erro ao buscar produtos:', error);
-        setLoading(false); // Mesmo em caso de erro, desativa o estado de carregamento
+        setLoading(false);
       }
     };
 
-    fetchProducts(); // Chama a função de busca
-  }, []); // O array vazio faz o useEffect rodar apenas uma vez após o componente ser montado
+    fetchProducts();
+  }, []);
 
   return (
     <div className="home-container">
@@ -40,9 +39,9 @@ const Home = () => {
       <div className="featured-products">
         <h2 className="section-title">Produtos em Destaque</h2>
         {loading ? (
-          <p>Carregando produtos...</p> // Exibe uma mensagem de carregamento enquanto os produtos não são carregados
+          <p>Carregando produtos...</p>
         ) : (
-          <Row>
+          <Row className="product-list">
             {products.map((product) => (
               <Col md={4} key={product.id} className="mb-4">
                 <Card className="product-card">
@@ -55,6 +54,21 @@ const Home = () => {
                     <Card.Text className="product-description">
                       {product.description}
                     </Card.Text>
+                    <Card.Text className="product-stock">
+                      Estoque: {product.stock} unidades disponíveis
+                    </Card.Text>
+                    <Card.Text className="product-colors">
+                      <span>Cores disponíveis:</span>
+                      <div className="color-bullets">
+                        {product.colors.map((color, index) => (
+                          <span
+                            key={index}
+                            className="color-bullet"
+                            style={{ backgroundColor: color }} // Usando a cor do produto como fundo
+                          ></span>
+                        ))}
+                      </div>
+                    </Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
@@ -63,7 +77,7 @@ const Home = () => {
         )}
       </div>
 
-      <Footer /> {/* Adicionando o Footer aqui */}
+      <Footer />
     </div>
   );
 };

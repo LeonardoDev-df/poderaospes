@@ -1,9 +1,9 @@
-// src/pages/AddProduct.js
+// src/pages/AddProduct.js 
 import React, { useState } from 'react';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import ProductForm from '../components/forms/ProductForm'; // Importa o formulário
-import '../style/AddProduct.css'; // Estilo opcional
+import '../style/AddProduct.css'; // Estilo opcional 
 import { getAuth } from 'firebase/auth';
 
 const AddProduct = () => {
@@ -12,6 +12,9 @@ const AddProduct = () => {
     description: '',
     price: '',
     category: '',
+    stock: '', // Adicionando o estoque
+    colors: [], // Adicionando cores
+    sizes: [],  // Adicionando tamanhos
     image: null,
   }]);
 
@@ -85,6 +88,9 @@ const AddProduct = () => {
           description: product.description,
           price: parseFloat(product.price),
           category: product.category,
+          stock: parseInt(product.stock, 10), // Adiciona o estoque como inteiro
+          colors: product.colors || [], // Adiciona cores
+          sizes: product.sizes || [], // Adiciona tamanhos
           imageUrl: imageUrl || '', // Se não houver URL, define como string vazia
         });
 
@@ -97,6 +103,9 @@ const AddProduct = () => {
         description: '',
         price: '',
         category: '',
+        stock: '', // Reseta o estoque
+        colors: [], // Reseta as cores
+        sizes: [],  // Reseta os tamanhos
         image: null,
       }]); // Reseta o formulário para o primeiro produto
     } catch (error) {
@@ -106,7 +115,16 @@ const AddProduct = () => {
   };
 
   const addProductField = () => {
-    setProducts([...products, { name: '', description: '', price: '', category: '', image: null }]);
+    setProducts([...products, {
+      name: '',
+      description: '',
+      price: '',
+      category: '',
+      stock: '', // Adicionando o estoque
+      colors: [], // Adicionando cores
+      sizes: [],  // Adicionando tamanhos
+      image: null,
+    }]);
   };
 
   return (
@@ -119,7 +137,6 @@ const AddProduct = () => {
           product={product}
           onChange={(e) => handleChange(index, e)}
           onFileChange={(e) => handleFileChange(index, e)}
-          onSubmit={handleSubmit}
           message={message}
         />
       ))}

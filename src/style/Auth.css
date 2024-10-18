@@ -43,21 +43,34 @@
     padding: 10px;
   }
   
-  .auth-btn {
+  .login-btn {
     width: 100%;
     padding: 10px;
     font-weight: bold;
-  }
-
-  .auth-btn.primary {
+    color: white; /* Cor do texto em branco para melhor contraste */
+    border-radius: 5px; /* Bordas levemente arredondadas */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transição suave */
     background-color: #FAB1B1; /* Cor primária */
-    border: none;
-  }
+}
 
-  .auth-btn.success {
+
+.login-btn:hover {
+    background-color: #F08080; /* Cor mais escura para o hover */
+    transform: translateY(-2px); /* Efeito de leve elevação */
+    cursor: pointer; /* Mudança de cursor para indicar interação */
+}
+
+.login-btn.success {
     background-color: #B2EBF2; /* Cor de sucesso */
     border: none;
-  }
+}
+
+.login-btn.success:hover {
+    background-color: #87d3db; /* Tom mais escuro no hover */
+    transform: translateY(-2px); /* Efeito de leve elevação */
+    cursor: pointer; /* Mudança de cursor */
+}
+
   
   .text-danger {
     color: #FF0000; /* Cor de erro */

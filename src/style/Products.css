@@ -1,23 +1,26 @@
-/* src/style/Products.css */
+/* Container principal do produto */
 .product-container {
-  width: 100%; /* Define uma largura máxima para o container */
+  width: 100%; /* Define a largura máxima para o container */
   margin: 0 auto; /* Centraliza o container */
   padding: 20px; /* Adiciona padding para melhor espaçamento */
-  background-color: #F5F5F5;
+  background-color: #F5F5F5; /* Cor de fundo neutra */
+  font-family: 'Montserrat', sans-serif; /* Fonte secundária */
 }
 
+/* Estilos do cartão do produto */
 .product-card {
   border: 1px solid #e0e0e0; /* Borda sutil */
   border-radius: 8px; /* Bordas arredondadas */
-  transition: transform 0.2s; /* Transição suave para hover */
+  transition: transform 0.2s, box-shadow 0.2s; /* Transição suave para hover */
   display: flex; /* Usar flexbox para centralizar conteúdo */
   flex-direction: column; /* Direção da coluna */
   justify-content: space-between; /* Espaço entre elementos */
   height: 100%; /* Faz com que o card tenha altura total */
   width: 100%; /* Faz o card ocupar a largura completa do grid */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra padrão */
-  margin: 0 auto; /* Centraliza o card */
   max-width: 350px; /* Define um limite para o tamanho máximo do card */
+  margin: 0 auto 20px; /* Centraliza o card e espaçamento abaixo */
+  background-color: #FFFFFF; /* Cor de fundo do card */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra padrão */
 }
 
 .product-card:hover {
@@ -25,6 +28,7 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra mais intensa no hover */
 }
 
+/* Estilos da imagem do produto */
 .product-image {
   height: 200px; /* Altura fixa para a imagem */
   width: 65%; /* A imagem ocupa 65% da largura do card */
@@ -34,15 +38,16 @@
   margin: 0 auto; /* Centraliza a imagem no card */
 }
 
-
-
+/* Estilos do nome do produto */
 .product-name {
   font-size: 1.2em; /* Aumenta o tamanho do texto do nome do produto */
   font-weight: bold; /* Destaca o nome */
   margin: 10px 0; /* Espaço acima e abaixo do nome */
   text-align: center; /* Centraliza o texto */
+  font-family: 'Playfair Display', serif; /* Fonte para título */
 }
 
+/* Estilos do preço do produto */
 .product-price {
   font-size: 1.1em; /* Aumenta o tamanho do texto do preço */
   color: #ff5722; /* Cor laranja para o preço */
@@ -50,6 +55,7 @@
   text-align: center; /* Centraliza o preço */
 }
 
+/* Estilos do botão "Adicionar ao Carrinho" */
 .add-to-cart {
   width: 100%; /* Botão ocupa toda a largura do card */
   padding: 10px; /* Padding do botão */
@@ -64,19 +70,52 @@
   background-color: #0056b3; /* Cor do botão ao passar o mouse */
 }
 
-.btn-warning {
-  background-color: #ffc107;
-  border: none;
-  width: 100%; /* Ocupa toda a largura do card */
-  margin-bottom: 10px; /* Espaço entre os botões */
+/* Estilos para o container dos botões */
+.button-container {
+  display: flex; /* Usar flexbox para disposição dos botões */
+  justify-content: space-between; /* Espaço entre os botões */
+  margin-top: 15px; /* Espaço acima dos botões */
 }
 
+/* Estilos específicos para os botões */
+.button-container .btn {
+  flex: 1; /* Faz com que os botões ocupem a mesma largura */
+  margin: 0 5px; /* Espaço entre os botões */
+  padding: 10px; /* Padding consistente */
+  font-size: 1em; /* Tamanho da fonte */
+  transition: background-color 0.2s, transform 0.2s; /* Transições suaves */
+}
+
+/* Botão de Editar */
+.btn-editar {
+  background-color: #ebaaeb !important; /* Cor de fundo do botão */
+  color: white; /* Cor do texto */
+  border: none; /* Remove a borda padrão */
+}
+
+.btn-editar:hover {
+  background-color: #a52387 !important; /* Cor ao passar o mouse */
+  transform: translateY(-2px); /* Leve elevação no hover */
+}
+
+/* Botão de Excluir */
 .btn-danger {
-  background-color: #dc3545;
-  border: none;
-  width: 100%; /* Ocupa toda a largura do card */
+  background-color: #dc3545; /* Cor de fundo do botão */
+  color: white; /* Cor do texto */
+  border: none; /* Remove a borda padrão */
 }
 
+.btn-danger:hover {
+  background-color: #c82333; /* Cor ao passar o mouse */
+  transform: translateY(-2px); /* Leve elevação no hover */
+}
+
+/* Ícones nos botões */
+.btn i {
+  margin-right: 5px; /* Espaço entre o ícone e o texto */
+}
+
+/* Estilos responsivos */
 @media (max-width: 768px) {
   .product-card {
     margin: 0 auto 20px; /* Espaçamento entre os cards em telas menores */
