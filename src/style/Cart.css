@@ -59,11 +59,21 @@
   color: #FAB1B1; /* Cor rosa suave para o total */
 }
 
-.btn-success {
+.botao-purchase {
   background-color: #E1BEE7; /* Cor lavanda suave para o botão de finalizar */
   border: none; /* Remove borda padrão */
   color: #FFFFFF; /* Texto branco */
   margin-top: auto; /* Empurra o botão para a parte inferior do cartão */
+  display: flex;
+  justify-content: center;
+  width: 30%;
+  height: 20% !important;
+}
+
+.botao-purchase:hover {
+  background-color: #F08080; /* Cor mais escura para o hover */
+  transform: translateY(-2px); /* Efeito de leve elevação */
+  cursor: pointer; /* Mudança de cursor para indicar interação */
 }
 
 .btn-danger {
@@ -79,4 +89,22 @@
   .cart-card {
     width: 90%; /* Cartões ocupam toda a largura em telas pequenas */
   }
+  .botao-purchase {
+    background-color: #E1BEE7; /* Cor lavanda suave para o botão de finalizar */
+    border: none; /* Remove borda padrão */
+    color: #FFFFFF; /* Texto branco */
+    margin-top: auto; /* Empurra o botão para a parte inferior do cartão */
+    display: flex;
+    justify-content: center !important;
+    width: 50%;
+    height: 20% !important;
+    align-items: center;
+  }
+
+  
+.botao-purchase:hover {
+  background-color: #F08080; /* Cor mais escura para o hover */
+  transform: translateY(-2px); /* Efeito de leve elevação */
+  cursor: pointer; /* Mudança de cursor para indicar interação */
+}
 }

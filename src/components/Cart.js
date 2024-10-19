@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../data/firebaseConfig';
-import { collection, addDoc } from 'firebase/firestore';
 import CartModal from './CartModal';
+import FinalizePurchase from './FinalizePurchase'; // Importe o novo componente
 import '../style/Cart.css';
 
 // Mapeamento de cores em hexadecimal para nomes
@@ -15,6 +15,7 @@ const colorNames = {
   '#0000FF': 'Azul',
   '#FFFFFF': 'Branco',
   '#000000': 'Preto',
+  '#FFC0CB': 'Rosa',
   // Adicione mais cores conforme necessário
 };
 
@@ -49,43 +50,24 @@ const Cart = () => {
   };
 
   const handleProceed = (productWithDetails) => {
-    const updatedCart = [...cartItems, {
-      ...productWithDetails.product,
-      color: productWithDetails.options.color,
-      size: productWithDetails.options.size,
-      quantity: productWithDetails.options.quantity, // Agora pega a quantidade do modal
-    }];
+    const updatedCart = [
+      ...cartItems,
+      {
+        ...productWithDetails.product,
+        color: productWithDetails.options.color,
+        size: productWithDetails.options.size,
+        quantity: productWithDetails.options.quantity, // Agora pega a quantidade do modal
+      },
+    ];
     setCartItems(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
     setShowModal(false);
   };
 
   const handleRemove = (id) => {
-    const updatedCart = cartItems.filter(item => item.id !== id);
+    const updatedCart = cartItems.filter((item) => item.id !== id);
     setCartItems(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
-  };
-
-  const finalizePurchase = async () => {
-    if (user) {
-      try {
-        await addDoc(collection(db, 'purchases'), {
-          userId: user.uid,
-          userName: user.displayName || 'Usuário Anônimo',
-          items: cartItems,
-          total: calculateTotal(),
-          createdAt: new Date(),
-        });
-        alert(`Compra finalizada com sucesso! Total: R$ ${calculateTotal()}`);
-        setCartItems([]);
-        localStorage.removeItem('cart');
-      } catch (error) {
-        console.error('Erro ao finalizar a compra:', error);
-        alert('Erro ao finalizar a compra. Tente novamente.');
-      }
-    } else {
-      alert('Você precisa estar logado para finalizar a compra.');
-    }
   };
 
   const calculateTotal = () => {
@@ -102,31 +84,38 @@ const Cart = () => {
           <div className="orh">
             {cartItems.map((item) => (
               <Card key={item.id} className="cart-card mb-3">
-                <div className="d-flex">
+                <div className="d-flex" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+                  <Card.Title className="cart-title">{item.name}</Card.Title>
                   <Card.Img variant="top" src={item.imageUrl} className="cart-image" />
-                  <Card.Body className="cart-body">
-                    <Card.Title className="cart-title">{item.name}</Card.Title>
-                    <Card.Text className="cart-text">
-                      Preço: R$ {item.price.toFixed(2)} <br />
-                      Quantidade: {item.quantity} <br />
-                      Cor: {getColorName(item.color) || 'N/A'} <br /> {/* Usando getColorName aqui */}
-                      Tamanho: {item.size || 'N/A'}
-                    </Card.Text>
-                    <Button variant="danger" onClick={() => handleRemove(item.id)}>
-                      Remover do Carrinho
-                    </Button>
-                  </Card.Body>
+                  <div>
+                    <Card.Body className="cart-body">
+                      <Card.Text className="cart-text">
+                        <span style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                          Preço: R$ {item.price.toFixed(2)}
+                        </span>
+                        <div style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
+                          <span>Quantidade: {item.quantity}</span>
+                          <span>Cor: {getColorName(item.color) || 'N/A'}</span>
+                        </div>
+                        <span style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>Tamanho: {item.size || 'N/A'}</span>
+                      </Card.Text>
+                      <Button variant="danger" onClick={() => handleRemove(item.id)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                        Remover do Carrinho
+                      </Button>
+                    </Card.Body>
+                  </div>
                 </div>
               </Card>
             ))}
           </div>
 
           <h3 className="text-end cart-total">Total: R$ {calculateTotal()}</h3>
-          <Button className="btn btn-success" onClick={finalizePurchase}>
-            Finalizar Compra
-          </Button>
+
+          {/* Utilizando o novo componente para finalizar a compra */}
+          <FinalizePurchase user={user} cartItems={cartItems} calculateTotal={calculateTotal} setCartItems={setCartItems} />
         </>
       )}
+
       {selectedProduct && (
         <CartModal
           show={showModal}
