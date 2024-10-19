@@ -41,7 +41,7 @@
 }
 
 button {
-  background-color: #FFD700;
+  background-color: #ebaaeb;
   border: none;
   border-radius: 20px;
   padding: 10px 20px;
@@ -51,7 +51,7 @@ button {
 }
 
 button:hover {
-  background-color: #FFBF00;
+  background-color: #eeccee;
 }
 .form-row {
   display: flex;

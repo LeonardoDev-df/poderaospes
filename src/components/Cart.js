@@ -1,39 +1,64 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
-import { getAuth, onAuthStateChanged } from 'firebase/auth'; // Importando para autenticação
-import { db } from '../data/firebaseConfig'; // Sua configuração do Firebase
-import { collection, addDoc } from 'firebase/firestore'; // Ajuste dependendo de qual banco você usa
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { db } from '../data/firebaseConfig';
+import { collection, addDoc } from 'firebase/firestore';
+import CartModal from './CartModal';
 import '../style/Cart.css';
+
+// Mapeamento de cores em hexadecimal para nomes
+const colorNames = {
+  '#C0C0C0': 'Prata',
+  '#F5F5DC': 'Bege',
+  '#FF0000': 'Vermelho',
+  '#008000': 'Verde',
+  '#0000FF': 'Azul',
+  '#FFFFFF': 'Branco',
+  '#000000': 'Preto',
+  // Adicione mais cores conforme necessário
+};
+
+const getColorName = (color) => colorNames[color] || 'Cor desconhecida';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [user, setUser] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const auth = getAuth();
 
   useEffect(() => {
-    // Carregar itens do carrinho do localStorage
     const storedCartItems = JSON.parse(localStorage.getItem('cart')) || [];
-    
-    // Verifica se storedCartItems é um array
-    if (Array.isArray(storedCartItems)) {
-      setCartItems(storedCartItems);
-    } else {
-      setCartItems([]); // Define como array vazio se não for um array
-    }
+    setCartItems(Array.isArray(storedCartItems) ? storedCartItems : []);
 
-    // Escutando alterações de autenticação
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
       } else {
-        // Limpa o carrinho ao deslogar
         setCartItems([]);
         localStorage.removeItem('cart');
       }
     });
 
-    return () => unsubscribe(); // Limpar o listener ao desmontar
+    return () => unsubscribe();
   }, [auth]);
+
+  const handleAddProduct = (product) => {
+    setSelectedProduct(product);
+    setShowModal(true);
+  };
+
+  const handleProceed = (productWithDetails) => {
+    const updatedCart = [...cartItems, {
+      ...productWithDetails.product,
+      color: productWithDetails.options.color,
+      size: productWithDetails.options.size,
+      quantity: productWithDetails.options.quantity, // Agora pega a quantidade do modal
+    }];
+    setCartItems(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    setShowModal(false);
+  };
 
   const handleRemove = (id) => {
     const updatedCart = cartItems.filter(item => item.id !== id);
@@ -44,17 +69,16 @@ const Cart = () => {
   const finalizePurchase = async () => {
     if (user) {
       try {
-        // Salvar a compra no banco de dados
         await addDoc(collection(db, 'purchases'), {
           userId: user.uid,
-          userName: user.displayName || 'Usuário Anônimo', // Pegar o nome do usuário
+          userName: user.displayName || 'Usuário Anônimo',
           items: cartItems,
           total: calculateTotal(),
           createdAt: new Date(),
         });
         alert(`Compra finalizada com sucesso! Total: R$ ${calculateTotal()}`);
-        setCartItems([]); // Limpa o carrinho após a compra
-        localStorage.removeItem('cart'); // Remove o carrinho do localStorage
+        setCartItems([]);
+        localStorage.removeItem('cart');
       } catch (error) {
         console.error('Erro ao finalizar a compra:', error);
         alert('Erro ao finalizar a compra. Tente novamente.');
@@ -84,7 +108,9 @@ const Cart = () => {
                     <Card.Title className="cart-title">{item.name}</Card.Title>
                     <Card.Text className="cart-text">
                       Preço: R$ {item.price.toFixed(2)} <br />
-                      Quantidade: {item.quantity}
+                      Quantidade: {item.quantity} <br />
+                      Cor: {getColorName(item.color) || 'N/A'} <br /> {/* Usando getColorName aqui */}
+                      Tamanho: {item.size || 'N/A'}
                     </Card.Text>
                     <Button variant="danger" onClick={() => handleRemove(item.id)}>
                       Remover do Carrinho
@@ -100,6 +126,14 @@ const Cart = () => {
             Finalizar Compra
           </Button>
         </>
+      )}
+      {selectedProduct && (
+        <CartModal
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+          product={selectedProduct}
+          handleProceed={handleProceed}
+        />
       )}
     </div>
   );

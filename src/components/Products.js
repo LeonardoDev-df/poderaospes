@@ -95,21 +95,8 @@ const Products = ({ updateCartCount }) => {
       setShowAlert(true);
       setTimeout(() => navigate('/auth'), 3000);
     } else {
-      try {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const existingProduct = cart.find(item => item.id === product.id);
-        if (existingProduct) {
-          existingProduct.quantity += 1;
-        } else {
-          cart.push({ ...product, quantity: 1 });
-        }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        setCartCount(cart.reduce((total, item) => total + item.quantity, 0));
-        setCurrentProduct(product);
-        setShowCartModal(true);
-      } catch (error) {
-        console.error('Erro ao adicionar produto ao carrinho:', error);
-      }
+      setCurrentProduct(product); // Define o produto atual
+      setShowCartModal(true); // Abre o modal para seleção de cor e tamanho
     }
   };
 
@@ -164,7 +151,7 @@ const Products = ({ updateCartCount }) => {
                   </div>
                 ) : (
                   <Button className="btn btn-primary add-to-cart" onClick={() => handleAddToCart(product)}>
-                    Adicionar ao Carrinho
+                    Selecionar Produto
                   </Button>
                 )}
               </Card.Body>
@@ -188,10 +175,31 @@ const Products = ({ updateCartCount }) => {
         handleDelete={handleDelete}
       />
       <CartModal
-        show={showCartModal}
-        handleClose={() => setShowCartModal(false)}
-        product={currentProduct}
-        handleProceed={() => navigate('/cart')}
+          show={showCartModal}
+          handleClose={() => setShowCartModal(false)}
+          product={currentProduct}
+          handleProceed={(selectedOptions) => {
+            // Adiciona o produto ao carrinho
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingProduct = cart.find(item => item.id === selectedOptions.product.id);
+            
+            if (existingProduct) {
+              existingProduct.quantity += selectedOptions.options.quantity; // Atualiza a quantidade
+              existingProduct.color = selectedOptions.options.color; // Atualiza a cor
+              existingProduct.size = selectedOptions.options.size; // Atualiza o tamanho
+            } else {
+              cart.push({ 
+                ...selectedOptions.product, 
+                quantity: selectedOptions.options.quantity,
+                color: selectedOptions.options.color, // Adiciona a cor
+                size: selectedOptions.options.size // Adiciona o tamanho
+              });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            setCartCount(cart.reduce((total, item) => total + item.quantity, 0));
+            setShowCartModal(false);
+          }}
       />
       
       <Footer />

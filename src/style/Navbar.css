@@ -1,10 +1,10 @@
 /* Paleta de Cores */
 :root {
   --cor-primaria: #e5def2; /* Lavanda clara */
-  --cor-secundaria: #20c49e; /* Verde água suave */
+  --cor-secundaria: #4bb9a0; /* Verde água suave */
 
   --cor-neutra: #F0F0F0; /* Cinza claro */
-  --cor-acento: #FFC107; /* Dourado mais suave */
+  --cor-acento: #d5eb5a; /* Dourado mais suave */
   --cor-neutra-fundo: #FAFAFA; /* Branco gelo */
   --cor-texto: #444; /* Texto levemente escurecido */
 }
