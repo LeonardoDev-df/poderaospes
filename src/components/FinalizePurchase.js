@@ -1,42 +1,87 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc } from 'firebase/firestore';
 import { db } from '../data/firebaseConfig';
 import emailjs from 'emailjs-com';
 
 const FinalizePurchase = ({ user, cartItems, calculateTotal, setCartItems }) => {
-  const finalizePurchase = async () => {
-    if (user) {
-      try {
-        // Prepara o objeto de endereço do usuário com todos os campos disponíveis
-        const userAddress = `${user.address || 'Endereço não fornecido'}, CEP: ${user.cep || 'CEP não fornecido'}`;
-        const userCpf = user.cpf || 'CPF não fornecido';
+  const [userData, setUserData] = useState(null);
 
-        // Adiciona a compra ao Firestore
+  // Mapeamento de cores em hexadecimal para nomes
+  const colorNames = {
+    '#C0C0C0': 'Prata',
+    '#F5F5DC': 'Bege',
+    '#FF0000': 'Vermelho',
+    '#008000': 'Verde',
+    '#0000FF': 'Azul',
+    '#FFFFFF': 'Branco',
+    '#000000': 'Preto',
+    '#FFC0CB': 'Rosa',
+    // Adicione mais cores conforme necessário
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (user && user.uid) {
+        try {
+          const userDocRef = doc(db, 'users', user.uid);
+          const userSnapshot = await getDoc(userDocRef);
+
+          if (userSnapshot.exists()) {
+            const userData = userSnapshot.data();
+            setUserData(userData);
+            console.log('Dados do usuário:', userData);
+          } else {
+            console.log('Nenhum documento encontrado para este usuário.');
+          }
+        } catch (error) {
+          console.error('Erro ao buscar dados do usuário:', error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [user]);
+
+  const finalizePurchase = async () => {
+    if (userData) {
+      console.log('Informações do usuário logado:');
+      
+      try {
+        const userAddress = `${userData.address || 'Endereço não fornecido'}`;
+        const userAddressCep = `CEP: ${userData.cep || 'CEP não fornecido'}`;
+        const userCpf = userData.cpf || 'CPF não fornecido';
+        const userName = `${userData.Firstname || 'Nome não fornecido'} ${userData.Secondname || 'Sobrenome não fornecido'}`;
+        const userPhone = userData.phone || 'Telefone não fornecido';
+
         await addDoc(collection(db, 'purchases'), {
           userId: user.uid,
-          userName: user.name || 'Usuário Anônimo',
+          userName: userName,
+          email: userData.email || 'E-mail não fornecido',
+          phone: userPhone,
           items: cartItems,
           total: calculateTotal(),
           address: userAddress,
+          cep: userAddressCep,
           cpf: userCpf,
           createdAt: new Date(),
         });
 
-        // Envia e-mail de confirmação ao dono do site
         sendEmailToOwner({
-          userName: user.name || 'Usuário Anônimo',
-          userEmail: user.email,
+          userName: userName,
+          userEmail: userData.email,
+          phone: userPhone,
           items: cartItems,
           total: calculateTotal(),
           address: userAddress,
+          cep: userAddressCep,
           cpf: userCpf,
           purchaseDate: new Date().toLocaleString(),
         });
 
         alert(`Compra finalizada com sucesso! Total: R$ ${calculateTotal()}`);
-        setCartItems([]); // Limpa o carrinho
-        localStorage.removeItem('cart'); // Remove os itens do localStorage
+        setCartItems([]);
+        localStorage.removeItem('cart');
       } catch (error) {
         console.error('Erro ao finalizar a compra:', error);
         alert('Erro ao finalizar a compra. Tente novamente.');
@@ -51,28 +96,29 @@ const FinalizePurchase = ({ user, cartItems, calculateTotal, setCartItems }) => 
       to_name: 'Dono do Site',
       from_name: purchaseDetails.userName,
       user_email: purchaseDetails.userEmail,
-      items: purchaseDetails.items.map(item => 
-        `${item.name} (Cor: ${item.color || 'não especificada'}, Tamanho: ${item.size || 'não especificado'}, Quantidade: ${item.quantity})`
-      ).join(',\n'),
+      phone: purchaseDetails.phone, // Adicionando o telefone ao e-mail
+      items: purchaseDetails.items.map(item => {
+        const colorName = colorNames[item.color] || item.color || 'não especificada';
+        return `${item.name} (Cor: ${colorName}, Tamanho: ${item.size || 'não especificado'}, Quantidade: ${item.quantity})`;
+      }).join(',\n'),
       total: purchaseDetails.total,
       address: purchaseDetails.address,
+      cep: purchaseDetails.cep,
       cpf: purchaseDetails.cpf,
       purchase_date: purchaseDetails.purchaseDate,
     };
 
     emailjs.send('service_2wpe0mc', 'template_f119epf', emailParams, 'GtUS43FyT4rOjy9Np')
       .then((response) => {
-        // Se o e-mail for enviado com sucesso, o código entrará aqui
         console.log('E-mail enviado com sucesso!', response.status, response.text);
-        alert('O e-mail foi enviado com sucesso!'); // Exibe uma mensagem para o usuário
+        alert('O e-mail foi enviado com sucesso!');
       })
       .catch((error) => {
-        // Se ocorrer algum erro, o código entrará aqui
         console.error('Erro ao enviar o e-mail:', error);
-        alert('Erro ao enviar o e-mail. Por favor, tente novamente.'); // Exibe uma mensagem de erro para o usuário
+        alert('Erro ao enviar o e-mail. Por favor, tente novamente.');
       });
   };
-  
+
   return (
     <Button className="botao-purchase" onClick={finalizePurchase} style={{ display: 'flex' }}>
       Finalizar Compra
