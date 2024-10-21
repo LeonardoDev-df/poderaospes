@@ -1,10 +1,22 @@
-// src/pages/AddProduct.js 
+// src/pages/AddProduct.js
 import React, { useState } from 'react';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import ProductForm from '../components/forms/ProductForm'; // Importa o formulário
 import '../style/AddProduct.css'; // Estilo opcional 
 import { getAuth } from 'firebase/auth';
+
+const colorNames = {
+  '#C0C0C0': 'Prata',
+  '#F5F5DC': 'Bege',
+  '#FF0000': 'Vermelho',
+  '#008000': 'Verde',
+  '#0000FF': 'Azul',
+  '#FFFFFF': 'Branco',
+  '#000000': 'Preto',
+  '#FFC0CB': 'Rosa',
+  // Adicione mais cores conforme necessário
+};
 
 const AddProduct = () => {
   const [products, setProducts] = useState([{
@@ -28,6 +40,14 @@ const AddProduct = () => {
     setProducts((prev) => {
       const updatedProducts = [...prev];
       updatedProducts[index] = { ...updatedProducts[index], [name]: value };
+      return updatedProducts;
+    });
+  };
+
+  const handleColorChange = (index, selectedColors) => {
+    setProducts((prev) => {
+      const updatedProducts = [...prev];
+      updatedProducts[index] = { ...updatedProducts[index], colors: selectedColors };
       return updatedProducts;
     });
   };
@@ -137,7 +157,9 @@ const AddProduct = () => {
           product={product}
           onChange={(e) => handleChange(index, e)}
           onFileChange={(e) => handleFileChange(index, e)}
+          onColorChange={(selectedColors) => handleColorChange(index, selectedColors)} // Adicione esta linha
           message={message}
+          colorNames={colorNames} // Passe colorNames para o ProductForm
         />
       ))}
       <button className="btn btn-secondary mt-3" onClick={addProductField}>

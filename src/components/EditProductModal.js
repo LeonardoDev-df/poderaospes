@@ -2,6 +2,16 @@ import React from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import '../style/EditProductModal.css'; // Importa um CSS para personalizações adicionais
 
+// Mapeamento de cores para seus valores hexadecimais
+const colorMap = {
+  'Bege': '#F5F5DC',
+  'Prata': '#C0C0C0',
+  'Preto': '#000000',
+  'Rosa': '#FFC0CB',
+  'Azul': '#0000FF',
+  'Verde': '#008000',
+};
+
 const EditProductModal = ({ show, handleClose, product, setProduct, handleSave }) => {
   const handleCheckboxChange = (event) => {
     const { name, value, checked } = event.target;
@@ -21,7 +31,7 @@ const EditProductModal = ({ show, handleClose, product, setProduct, handleSave }
     }
 
     // Atualiza o produto com os novos valores
-    setProduct({ ...product, [name]: updatedValues });
+    setProduct((prevProduct) => ({ ...prevProduct, [name]: updatedValues }));
   };
 
   return (
@@ -37,88 +47,37 @@ const EditProductModal = ({ show, handleClose, product, setProduct, handleSave }
               <Form.Control
                 type="text"
                 value={product.name}
-                onChange={(e) => setProduct({ ...product, name: e.target.value })}
+                onChange={(e) => setProduct((prevProduct) => ({ ...prevProduct, name: e.target.value }))} // Atualiza o nome
                 placeholder="Digite o nome do produto"
                 className="rounded-pill"
                 required
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formProductDescription">
-              <Form.Label>Descrição</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={product.description}
-                onChange={(e) => setProduct({ ...product, description: e.target.value })}
-                placeholder="Digite a descrição do produto"
-                className="rounded-pill"
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formProductPrice">
-              <Form.Label>Preço (R$)</Form.Label>
-              <Form.Control
-                type="number"
-                value={product.price}
-                onChange={(e) => setProduct({ ...product, price: parseFloat(e.target.value) })}
-                placeholder="Digite o preço do produto"
-                className="rounded-pill"
-                required
-                min="0"
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formProductStock">
-              <Form.Label>Quantidade em Estoque</Form.Label>
-              <Form.Control
-                type="number"
-                value={product.stock}
-                onChange={(e) => setProduct({ ...product, stock: parseInt(e.target.value, 10) })}
-                placeholder="Digite a quantidade em estoque"
-                className="rounded-pill"
-                required
-                min="0"
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formProductCategory">
-              <Form.Label>Categoria</Form.Label>
-              <Form.Control
-                as="select"
-                value={product.category}
-                onChange={(e) => setProduct({ ...product, category: e.target.value })}
-                className="rounded-pill"
-                required
-              >
-                <option value="">Selecione...</option>
-                <option value="Sandálias">Sandálias</option>
-                <option value="Rasteirinhas">Rasteirinhas</option>
-                <option value="Sapatos de Salto">Sapatos de Salto</option>
-                <option value="Sapatilhas">Sapatilhas</option>
-                <option value="Botas">Botas</option>
-              </Form.Control>
-            </Form.Group>
+
+            {/* Cores Disponíveis */}
             <Form.Group className="mb-3" controlId="formProductColors">
               <Form.Label>Cores Disponíveis</Form.Label>
-              {[
-                { name: 'Bege', hex: '#D8C49B' },
-                { name: 'Prata', hex: '#C0C0C0' },
-                { name: 'Preto', hex: '#000000' },
-                { name: 'Rosa', hex: '#FFC0CB' },
-                { name: 'Azul', hex: '#0000FF' },
-                { name: 'Verde', hex: '#008000' }
-              ].map(({ name, hex }) => (
-                <Form.Check
-                  key={name}
-                  type="checkbox"
-                  id={name}
-                  label={name}
-                  value={name}
-                  style={{ color: hex }} // Ajusta a cor do texto
-                  checked={Array.isArray(product.colors) && product.colors.includes(name)}
-                  onChange={handleCheckboxChange}
-                  name="colors" // Nome do campo para cores
-                />
-              ))}
+              <div className="checkbox-group">
+                {Object.keys(colorMap).map((color) => (
+                  <div key={color} className="form-check">
+                    <input
+                      type="checkbox"
+                      id={color}
+                      name="colors"
+                      value={colorMap[color]} // Usa o valor hexadecimal correspondente
+                      className="form-check-input"
+                      checked={Array.isArray(product.colors) && product.colors.includes(colorMap[color])} // Verifica se a cor está selecionada
+                      onChange={handleCheckboxChange} // Lógica para adicionar/remover a cor
+                    />
+                    <label htmlFor={color} className="form-check-label" style={{ color: colorMap[color] }}>
+                      {color}
+                    </label>
+                  </div>
+                ))}
+              </div>
             </Form.Group>
+
+            {/* Números Disponíveis */}
             <Form.Group className="mb-3" controlId="formProductSizes">
               <Form.Label>Números Disponíveis</Form.Label>
               {['34', '35', '36', '37', '38', '39'].map((size) => (
@@ -134,12 +93,13 @@ const EditProductModal = ({ show, handleClose, product, setProduct, handleSave }
                 />
               ))}
             </Form.Group>
+
             <Form.Group className="mb-3" controlId="formProductImage">
               <Form.Label>URL da Imagem</Form.Label>
               <Form.Control
                 type="text"
                 value={product.imageUrl}
-                onChange={(e) => setProduct({ ...product, imageUrl: e.target.value })}
+                onChange={(e) => setProduct((prevProduct) => ({ ...prevProduct, imageUrl: e.target.value }))} // Atualiza o URL da imagem
                 placeholder="Digite a URL da imagem"
                 className="rounded-pill"
               />

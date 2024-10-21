@@ -35,6 +35,24 @@ const CartModal = ({ show, handleClose, product, handleProceed }) => {
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [error, setError] = useState(''); // Estado para a mensagem de erro
+
+  const handleBlur = (e) => {
+    const value = Math.max(1, Math.min(e.target.value, product.stock)); // Limita o valor ao estoque e 1
+    setQuantity(value);
+  };
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setQuantity(value);
+    
+    // Verifica se o valor é maior que o estoque e exibe a mensagem de erro
+    if (value > product.stock) {
+      setError(`Erro: a quantidade selecionada excede o estoque disponível (${product.stock}).`);
+    } else {
+      setError(''); // Limpa a mensagem de erro se o valor estiver dentro do limite
+    }
+  };
 
   // Definir o primeiro tamanho disponível como o padrão
   useEffect(() => {
@@ -83,6 +101,14 @@ const CartModal = ({ show, handleClose, product, handleProceed }) => {
   if (!product) {
     return null;
   }
+
+   // Função para garantir que a quantidade não ultrapasse o estoque
+   const handleQuantityChange = (value) => {
+    const validQuantity = Math.max(1, Math.min(value, product.stock)); // Valor mínimo é 1 e o máximo é o estoque
+    setQuantity(validQuantity);
+  };
+
+  var stoke = product.stock
 
   return (
     <Modal show={show} onHide={handleClose} style={modalStyles}>
@@ -139,18 +165,27 @@ const CartModal = ({ show, handleClose, product, handleProceed }) => {
         <div className='sis'>
           <Form.Group>
             <div className='sas'>
-              <Form.Label>Quantidade</Form.Label>
+              <Form.Label>Quantidade (Em estoque: {product.stock})</Form.Label>
             </div>
-            <div className='sist'>
-              <Form.Control
-                type="number"
-                value={quantity}
-                min={1}
-                onChange={(e) => setQuantity(Math.max(1, e.target.value))}
-              />
+            <div className='sist' style={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            <Form.Control
+                 
+                  type="number"
+                  value={quantity}
+                  min={1}
+                  max={product.stock}
+                  onChange={handleChange} // Atualiza o valor ao digitar
+                  onBlur={handleBlur} // Corrige o valor ao perder o foco
+                />
+                
+                {error && <p style={{ color: 'red' }}>{error}</p>} {/* Exibe a mensagem de erro */}
+          
+
+
             </div>
           </Form.Group>
         </div>
+
 
         <p style={infoTextStyles}>
           O produto "{product?.name}" será adicionado ao seu carrinho com a cor "{getColorName(selectedColor)}" e tamanho "{selectedSize}". Deseja continuar comprando ou finalizar a compra?
@@ -160,7 +195,10 @@ const CartModal = ({ show, handleClose, product, handleProceed }) => {
         <Button variant="secondary" onClick={handleClose}>
           Cancelar
         </Button>
-        <Button variant="primary" onClick={handleAddToCart}>
+        <Button variant="primary" 
+          onClick={handleAddToCart}
+          disabled={!!error} // Desativa o botão se houver um erro
+        >
           Adicionar ao Carrinho
         </Button>
       </Modal.Footer>

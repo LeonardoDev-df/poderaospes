@@ -111,12 +111,16 @@
     align-items: center;
   }
 
-  .sist{
-    width: 65%;
+  
+
+  .siste{
+    width: 20px !important;
     justify-content: center;
     align-items: center;
     padding-left: 130px;
   }
+
+
   .Form.Group{
     display: flex;
     flex-direction: row;
@@ -124,7 +128,8 @@
     justify-content: center;
     align-items: center;
   }
-  
+
+
   /* Responsividade */
   @media (max-width: 768px) {
     .cart-card {

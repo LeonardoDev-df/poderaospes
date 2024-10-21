@@ -1,15 +1,33 @@
-/* src/style/AddProduct.css */
 .add-product-container {
-  max-width: 800px;
+
+  max-width: 60%;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f9f9f9; /* Cor de fundo clara */
-  border-radius: 8px; /* Bordas arredondadas */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  align-items: center;
 }
 
 .product-form {
-  background-color: #ffffff; /* Fundo branco para o formulário */
-  padding: 20px; /* Adiciona padding ao redor do formulário */
-  border-radius: 8px; /* Bordas arredondadas no formulário */
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .product-form {
+    padding: 15px;
+  }
+
+  .add-product-container {
+    padding: 15px;
+  }
 }
