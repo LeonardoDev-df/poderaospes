@@ -1,4 +1,3 @@
-// src/pages/AddProduct.js
 import React, { useState } from 'react';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
@@ -150,24 +149,32 @@ const AddProduct = () => {
   return (
     <div className="add-product-container">
       <h2 className="text-center">Cadastrar Produto</h2>
-      {uploadProgress > 0 && <p>Progresso do upload: {uploadProgress.toFixed(2)}%</p>} {/* Exibe o progresso do upload */}
-      {products.map((product, index) => (
-        <ProductForm
-          key={index}
-          product={product}
-          onChange={(e) => handleChange(index, e)}
-          onFileChange={(e) => handleFileChange(index, e)}
-          onColorChange={(selectedColors) => handleColorChange(index, selectedColors)} // Adicione esta linha
-          message={message}
-          colorNames={colorNames} // Passe colorNames para o ProductForm
-        />
-      ))}
-      <button className="btn btn-secondary mt-3" onClick={addProductField}>
-        Adicionar Outro Produto
-      </button>
-      <button type="submit" className="btn btn-primary mt-3" onClick={handleSubmit}>
-        Adicionar Produtos
-      </button>
+      {uploadProgress > 0 && <p>Progresso do upload: {uploadProgress.toFixed(2)}%</p>}
+      
+      <div className="row-add">
+        {products.map((product, index) => (
+          <div key={index} className="col-12 col-md-12 "> {/* Responsivo com colunas */}
+            <ProductForm
+              product={product}
+              onChange={(e) => handleChange(index, e)}
+              onFileChange={(e) => handleFileChange(index, e)}
+              onColorChange={(selectedColors) => handleColorChange(index, selectedColors)}
+              message={message}
+              colorNames={colorNames}
+            />
+          </div>
+        ))}
+      </div>
+
+      <div className="d-flex justify-content-between mt-3">
+        <button className="custom-btn" onClick={addProductField}>
+           Outro Produto
+        </button>
+        <button type="submit" className="custom-btn" onClick={handleSubmit}>
+          Adicionar Produtos
+        </button>
+      </div>
+
     </div>
   );
 };

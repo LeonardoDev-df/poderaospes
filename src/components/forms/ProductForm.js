@@ -157,6 +157,8 @@ const ProductForm = ({ product, onChange, onFileChange, message }) => {
         </select>
       </div>
 
+      <br></br>
+
       <div className="form-group">
         <label htmlFor="image">Imagem:</label>
         <input

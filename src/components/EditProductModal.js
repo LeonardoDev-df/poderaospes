@@ -54,6 +54,45 @@ const EditProductModal = ({ show, handleClose, product, setProduct, handleSave }
               />
             </Form.Group>
 
+	    <Form.Group className="mb-3" controlId="formProductDescription">
+              <Form.Label>Descrição</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                value={product.description}
+                onChange={(e) => setProduct((prevProduct) => ({ ...prevProduct, description: e.target.value }))}
+                placeholder="Digite a descrição do produto"
+                className="rounded-pill"
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formProductPrice">
+              <Form.Label>Preço (R$)</Form.Label>
+              <Form.Control
+                type="number"
+                value={product.price}
+                onChange={(e) => setProduct((prevProduct) => ({ ...prevProduct, price: parseFloat(e.target.value) }))}
+                placeholder="Digite o preço do produto"
+                className="rounded-pill"
+                required
+                min="0"
+              />
+            </Form.Group>
+
+	    <Form.Group className="mb-3" controlId="formProductStock">
+              <Form.Label>Quantidade em Estoque</Form.Label>
+              <Form.Control
+                type="number"
+                value={product.stock}
+                onChange={(e) => setProduct((prevProduct) => ({ ...prevProduct, stock: parseInt(e.target.value, 10) }))}
+                placeholder="Digite a quantidade em estoque"
+                className="rounded-pill"
+                required
+                min="0"
+              />
+            </Form.Group>
+
+
             {/* Cores Disponíveis */}
             <Form.Group className="mb-3" controlId="formProductColors">
               <Form.Label>Cores Disponíveis</Form.Label>
@@ -93,6 +132,7 @@ const EditProductModal = ({ show, handleClose, product, setProduct, handleSave }
                 />
               ))}
             </Form.Group>
+
 
             <Form.Group className="mb-3" controlId="formProductImage">
               <Form.Label>URL da Imagem</Form.Label>
