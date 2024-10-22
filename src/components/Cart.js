@@ -86,7 +86,7 @@ const Cart = () => {
               <Card key={item.id} className="cart-card mb-3">
                 <div className="d-flex" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
                   <Card.Title className="cart-title">{item.name}</Card.Title>
-                  <Card.Img variant="top" src={item.imageUrl} className="cart-image" />
+                  <Card.Img variant="top" src={item.imageUrls} className="cart-image" />
                   <div>
                     <Card.Body className="cart-body">
                       <Card.Text className="cart-text">
