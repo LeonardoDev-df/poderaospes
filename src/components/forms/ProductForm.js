@@ -15,22 +15,17 @@ const ProductForm = ({ product, onChange, onFileChange, message }) => {
 
   const handleCheckboxChange = (event) => {
     const { name, value, checked } = event.target;
-
-    // Clona o array atual para não mutar o estado diretamente
     const updatedValues = Array.isArray(product[name]) ? [...product[name]] : [];
 
     if (checked) {
-      // Se estiver checado, adiciona o valor ao array
       updatedValues.push(value);
     } else {
-      // Se não estiver checado, remove o valor do array
       const index = updatedValues.indexOf(value);
       if (index > -1) {
         updatedValues.splice(index, 1);
       }
     }
 
-    // Atualiza o produto com os novos valores
     onChange({ target: { name, value: updatedValues } });
   };
 
@@ -104,11 +99,11 @@ const ProductForm = ({ product, onChange, onFileChange, message }) => {
                 <input
                   type="checkbox"
                   id={color}
-                  name="colors" // Certifique-se de que o nome do campo seja 'colors'
-                  value={colorMap[color]} // Usar o valor hexadecimal correspondente
+                  name="colors"
+                  value={colorMap[color]}
                   className="form-check-input"
-                  checked={Array.isArray(product.colors) && product.colors.includes(colorMap[color])} // Verifica se colors é um array
-                  onChange={handleCheckboxChange} // Use a nova função de mudança
+                  checked={Array.isArray(product.colors) && product.colors.includes(colorMap[color])}
+                  onChange={handleCheckboxChange}
                 />
                 <label htmlFor={color} className="form-check-label">{color}</label>
               </div>
@@ -124,11 +119,11 @@ const ProductForm = ({ product, onChange, onFileChange, message }) => {
                 <input
                   type="checkbox"
                   id={size}
-                  name="sizes" // Certifique-se de que o nome do campo seja 'sizes'
+                  name="sizes"
                   value={size}
                   className="form-check-input"
-                  checked={Array.isArray(product.sizes) && product.sizes.includes(size)} // Verifica se sizes é um array
-                  onChange={handleCheckboxChange} // Use a nova função de mudança
+                  checked={Array.isArray(product.sizes) && product.sizes.includes(size)}
+                  onChange={handleCheckboxChange}
                 />
                 <label htmlFor={size} className="form-check-label">{size}</label>
               </div>
@@ -157,19 +152,35 @@ const ProductForm = ({ product, onChange, onFileChange, message }) => {
         </select>
       </div>
 
-      <br></br>
+      <br />
 
+      {/* Campo para carregar até 3 imagens separadas */}
       <div className="form-group">
-        <label htmlFor="image">Imagem:</label>
+      <label htmlFor="images">Imagens (até 3):</label>
         <input
           type="file"
-          id="image"
-          className="form-control-file"
-          onChange={onFileChange}
+          name="images"
+          multiple // Permite seleção de múltiplos arquivos
           accept="image/*"
+          className="form-control-file"
+          onChange={onFileChange} // Função passada via props para lidar com as mudanças
+          max="3" // Limite para até 3 arquivos
         />
-        {product.image && <p className="mt-2">Arquivo selecionado: {product.image.name}</p>}
       </div>
+
+      
+
+      {/* Exibe as imagens selecionadas */}
+      {product.images && product.images.length > 0 && (
+        <div className="mt-2">
+          <p>Imagens selecionadas:</p>
+          <ul className="mt-2">
+            {product.images.map((image, index) => (
+              <li key={index}>{image.name}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </form>
   );
 };
@@ -181,9 +192,9 @@ ProductForm.propTypes = {
     price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     category: PropTypes.string.isRequired,
     stock: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    colors: PropTypes.arrayOf(PropTypes.string), // Aceita múltiplas cores em formato hexadecimal
-    sizes: PropTypes.arrayOf(PropTypes.string),  // Aceita múltiplos números
-    image: PropTypes.instanceOf(File),
+    colors: PropTypes.arrayOf(PropTypes.string),
+    sizes: PropTypes.arrayOf(PropTypes.string),
+    images: PropTypes.arrayOf(PropTypes.instanceOf(File)), // Para múltiplas imagens
   }).isRequired,
   onChange: PropTypes.func.isRequired,
   onFileChange: PropTypes.func.isRequired,

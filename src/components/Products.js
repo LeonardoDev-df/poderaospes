@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Col, Row, Button, Alert } from 'react-bootstrap';
+import { Card, Col, Row, Button, Alert, Modal } from 'react-bootstrap';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,8 @@ const Products = ({ updateCartCount }) => {
   const [currentProduct, setCurrentProduct] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [showCartModal, setShowCartModal] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false); // Estado para o modal de imagens
+  const [showAllImages, setShowAllImages] = useState(false); // Estado para controlar a visibilidade das imagens
   const navigate = useNavigate();
   const [cartCount, setCartCount] = useState(0);
 
@@ -64,7 +66,7 @@ const Products = ({ updateCartCount }) => {
         description: currentProduct.description,
         price: currentProduct.price,
         stock: currentProduct.stock,
-        imageUrl: currentProduct.imageUrl,
+        imageUrls: currentProduct.imageUrls,
         colors: currentProduct.colors,
         sizes: currentProduct.sizes,
       });
@@ -95,9 +97,22 @@ const Products = ({ updateCartCount }) => {
       setShowAlert(true);
       setTimeout(() => navigate('/auth'), 3000);
     } else {
-      setCurrentProduct(product); // Define o produto atual
-      setShowCartModal(true); // Abre o modal para seleção de cor e tamanho
+      setCurrentProduct(product);
+      setShowCartModal(true);
     }
+  };
+
+  const toggleImages = () => {
+    setShowAllImages(prev => !prev);
+  };
+
+  const openImageModal = () => {
+    setShowImageModal(true);
+    setShowAllImages(false); // Reseta a visualização de imagens
+  };
+
+  const closeImageModal = () => {
+    setShowImageModal(false);
   };
 
   return (
@@ -114,8 +129,16 @@ const Products = ({ updateCartCount }) => {
         {products.map((product) => (
           <Col md={4} key={product.id} className="mb-4">
             <Card className="product-card shadow-sm">
-              <Card.Img variant="top" src={product.imageUrl} className="product-image" />
               <Card.Body>
+                <div className="product-images">
+                  {/* Exibe apenas a imagem na posição 0 inicialmente */}
+                  <Card.Img
+                    variant="top"
+                    src={product.imageUrls[0]}
+                    className="product-image"
+                    onClick={openImageModal} // Abre o modal ao clicar na imagem
+                  />
+                </div>
                 <Card.Title className="product-name">{product.name}</Card.Title>
                 <Card.Text className="product-price">
                   Preço: R$ {product.price.toFixed(2)}
@@ -133,7 +156,7 @@ const Products = ({ updateCartCount }) => {
                       <span
                         key={index}
                         className="color-bullet"
-                        style={{ backgroundColor: color }} // Usando a cor do produto como fundo
+                        style={{ backgroundColor: color }}
                       ></span>
                     ))}
                   </div>
@@ -141,11 +164,11 @@ const Products = ({ updateCartCount }) => {
                 {userEmail === 'adm@adm.com' ? (
                   <div className="button-container">
                     <Button className="btn btn-editar" onClick={() => handleEdit(product)}>
-                      <i className="fas fa-edit"></i> {/* Ícone de edição */}
+                      <i className="fas fa-edit"></i>
                       Editar
                     </Button>
                     <Button className="btn btn-danger" onClick={() => handleDeleteModal(product)}>
-                      <i className="fas fa-trash"></i> {/* Ícone de exclusão */}
+                      <i className="fas fa-trash"></i>
                       Excluir
                     </Button>
                   </div>
@@ -156,6 +179,27 @@ const Products = ({ updateCartCount }) => {
                 )}
               </Card.Body>
             </Card>
+
+            {/* Modal para exibir as imagens */}
+            <Modal show={showImageModal} onHide={closeImageModal} size="lg" centered>
+              <Modal.Header closeButton>
+                <Modal.Title>Imagens do Produto</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Row className="g-2">
+                  {product.imageUrls.map((url, index) => (
+                    <Col xs={6} md={4} key={index}> {/* Adiciona responsividade com xs e md */}
+                      <Card.Img variant="top" src={url} className="product-image" />
+                    </Col>
+                  ))}
+                </Row>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={closeImageModal}>
+                  Fechar
+                </Button>
+              </Modal.Footer>
+            </Modal>
           </Col>
         ))}
       </Row>
@@ -175,31 +219,30 @@ const Products = ({ updateCartCount }) => {
         handleDelete={handleDelete}
       />
       <CartModal
-          show={showCartModal}
-          handleClose={() => setShowCartModal(false)}
-          product={currentProduct}
-          handleProceed={(selectedOptions) => {
-            // Adiciona o produto ao carrinho
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const existingProduct = cart.find(item => item.id === selectedOptions.product.id);
-            
-            if (existingProduct) {
-              existingProduct.quantity += selectedOptions.options.quantity; // Atualiza a quantidade
-              existingProduct.color = selectedOptions.options.color; // Atualiza a cor
-              existingProduct.size = selectedOptions.options.size; // Atualiza o tamanho
-            } else {
-              cart.push({ 
-                ...selectedOptions.product, 
-                quantity: selectedOptions.options.quantity,
-                color: selectedOptions.options.color, // Adiciona a cor
-                size: selectedOptions.options.size // Adiciona o tamanho
-              });
-            }
-            
-            localStorage.setItem('cart', JSON.stringify(cart));
-            setCartCount(cart.reduce((total, item) => total + item.quantity, 0));
-            setShowCartModal(false);
-          }}
+        show={showCartModal}
+        handleClose={() => setShowCartModal(false)}
+        product={currentProduct}
+        handleProceed={(selectedOptions) => {
+          const cart = JSON.parse(localStorage.getItem('cart')) || [];
+          const existingProduct = cart.find(item => item.id === selectedOptions.product.id);
+          
+          if (existingProduct) {
+            existingProduct.quantity += selectedOptions.options.quantity;
+            existingProduct.color = selectedOptions.options.color;
+            existingProduct.size = selectedOptions.options.size;
+          } else {
+            cart.push({ 
+              ...selectedOptions.product, 
+              quantity: selectedOptions.options.quantity,
+              color: selectedOptions.options.color,
+              size: selectedOptions.options.size
+            });
+          }
+          
+          localStorage.setItem('cart', JSON.stringify(cart));
+          setCartCount(cart.reduce((total, item) => total + item.quantity, 0));
+          setShowCartModal(false);
+        }}
       />
       
       <Footer />

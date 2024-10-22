@@ -30,8 +30,9 @@
 
 /* Estilos da imagem do produto */
 .product-image {
-  height: 200px; /* Altura fixa para a imagem */
-  width: 65%; /* A imagem ocupa 65% da largura do card */
+  display: flex;
+  height: auto; /* Altura fixa para a imagem */
+  width: 100%; /* A imagem ocupa 65% da largura do card */
   object-fit: cover; /* Ajusta a imagem sem distorcer */
   border-top-left-radius: 8px; /* Bordas arredondadas na parte superior */
   border-top-right-radius: 8px; /* Bordas arredondadas na parte superior */
@@ -122,6 +123,10 @@
   }
 
   .product-image {
-    height: 150px; /* Reduz o tamanho da imagem em telas menores */
+    display: flex;
+    width: 100%;
+    height: auto; /* Mantém a proporção da imagem */
+    flex-direction: column;
   }
+  
 }

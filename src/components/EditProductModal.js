@@ -34,6 +34,12 @@ const EditProductModal = ({ show, handleClose, product, setProduct, handleSave }
     setProduct((prevProduct) => ({ ...prevProduct, [name]: updatedValues }));
   };
 
+  const handleImageUrlChange = (index, newUrl) => {
+    const updatedImageUrls = [...product.imageUrls];
+    updatedImageUrls[index] = newUrl;
+    setProduct((prevProduct) => ({ ...prevProduct, imageUrls: updatedImageUrls }));
+  };
+
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton className="bg-light">
@@ -54,24 +60,25 @@ const EditProductModal = ({ show, handleClose, product, setProduct, handleSave }
               />
             </Form.Group>
 
-	    <Form.Group className="mb-3" controlId="formProductDescription">
+            <Form.Group className="mb-3" controlId="formProductDescription">
               <Form.Label>Descrição</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
                 value={product.description}
-                onChange={(e) => setProduct((prevProduct) => ({ ...prevProduct, description: e.target.value }))}
+                onChange={(e) => setProduct((prevProduct) => ({ ...prevProduct, description: e.target.value }))} // Atualiza a descrição
                 placeholder="Digite a descrição do produto"
                 className="rounded-pill"
                 required
               />
             </Form.Group>
+
             <Form.Group className="mb-3" controlId="formProductPrice">
               <Form.Label>Preço (R$)</Form.Label>
               <Form.Control
                 type="number"
                 value={product.price}
-                onChange={(e) => setProduct((prevProduct) => ({ ...prevProduct, price: parseFloat(e.target.value) }))}
+                onChange={(e) => setProduct((prevProduct) => ({ ...prevProduct, price: parseFloat(e.target.value) }))} // Atualiza o preço
                 placeholder="Digite o preço do produto"
                 className="rounded-pill"
                 required
@@ -79,19 +86,18 @@ const EditProductModal = ({ show, handleClose, product, setProduct, handleSave }
               />
             </Form.Group>
 
-	    <Form.Group className="mb-3" controlId="formProductStock">
+            <Form.Group className="mb-3" controlId="formProductStock">
               <Form.Label>Quantidade em Estoque</Form.Label>
               <Form.Control
                 type="number"
                 value={product.stock}
-                onChange={(e) => setProduct((prevProduct) => ({ ...prevProduct, stock: parseInt(e.target.value, 10) }))}
+                onChange={(e) => setProduct((prevProduct) => ({ ...prevProduct, stock: parseInt(e.target.value, 10) }))} // Atualiza o estoque
                 placeholder="Digite a quantidade em estoque"
                 className="rounded-pill"
                 required
                 min="0"
               />
             </Form.Group>
-
 
             {/* Cores Disponíveis */}
             <Form.Group className="mb-3" controlId="formProductColors">
@@ -126,23 +132,26 @@ const EditProductModal = ({ show, handleClose, product, setProduct, handleSave }
                   id={size}
                   label={size}
                   value={size}
-                  checked={Array.isArray(product.sizes) && product.sizes.includes(size)}
+                  checked={Array.isArray(product.sizes) && product.sizes.includes(size)} // Verifica se o tamanho está selecionado
                   onChange={handleCheckboxChange}
                   name="sizes" // Nome do campo para tamanhos
                 />
               ))}
             </Form.Group>
 
-
-            <Form.Group className="mb-3" controlId="formProductImage">
-              <Form.Label>URL da Imagem</Form.Label>
-              <Form.Control
-                type="text"
-                value={product.imageUrl}
-                onChange={(e) => setProduct((prevProduct) => ({ ...prevProduct, imageUrl: e.target.value }))} // Atualiza o URL da imagem
-                placeholder="Digite a URL da imagem"
-                className="rounded-pill"
-              />
+            {/* URLs das Imagens */}
+            <Form.Group className="mb-3" controlId="formProductImages">
+              <Form.Label>URLs das Imagens</Form.Label>
+              {product.imageUrls.map((url, index) => (
+                <Form.Control
+                  key={index}
+                  type="text"
+                  value={url}
+                  onChange={(e) => handleImageUrlChange(index, e.target.value)} // Atualiza a URL específica
+                  placeholder={`Digite a URL da imagem ${index + 1}`}
+                  className="rounded-pill mb-2"
+                />
+              ))}
             </Form.Group>
           </Form>
         )}
