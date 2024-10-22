@@ -5,6 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { db, auth } from '../data/firebaseConfig';
 import '../style/Products.css';
+
 import Footer from './Footer';
 import EditProductModal from './EditProductModal';
 import DeleteProductModal from './DeleteProductModal';
@@ -19,7 +20,7 @@ const Products = ({ updateCartCount }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [showCartModal, setShowCartModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false); // Estado para o modal de imagens
-  const [showAllImages, setShowAllImages] = useState(false); // Estado para controlar a visibilidade das imagens
+  const [selectedProductImages, setSelectedProductImages] = useState([]); // Estado para armazenar as imagens do produto selecionado
   const navigate = useNavigate();
   const [cartCount, setCartCount] = useState(0);
 
@@ -102,13 +103,9 @@ const Products = ({ updateCartCount }) => {
     }
   };
 
-  const toggleImages = () => {
-    setShowAllImages(prev => !prev);
-  };
-
-  const openImageModal = () => {
+  const openImageModal = (images) => {
+    setSelectedProductImages(images); // Armazena as imagens do produto selecionado
     setShowImageModal(true);
-    setShowAllImages(false); // Reseta a visualização de imagens
   };
 
   const closeImageModal = () => {
@@ -136,7 +133,7 @@ const Products = ({ updateCartCount }) => {
                     variant="top"
                     src={product.imageUrls[0]}
                     className="product-image"
-                    onClick={openImageModal} // Abre o modal ao clicar na imagem
+                    onClick={() => openImageModal(product.imageUrls)} // Abre o modal com as imagens do produto
                   />
                 </div>
                 <Card.Title className="product-name">{product.name}</Card.Title>
@@ -179,30 +176,30 @@ const Products = ({ updateCartCount }) => {
                 )}
               </Card.Body>
             </Card>
-
-            {/* Modal para exibir as imagens */}
-            <Modal show={showImageModal} onHide={closeImageModal} size="lg" centered>
-              <Modal.Header closeButton>
-                <Modal.Title>Imagens do Produto</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Row className="g-2">
-                  {product.imageUrls.map((url, index) => (
-                    <Col xs={6} md={4} key={index}> {/* Adiciona responsividade com xs e md */}
-                      <Card.Img variant="top" src={url} className="product-image" />
-                    </Col>
-                  ))}
-                </Row>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={closeImageModal}>
-                  Fechar
-                </Button>
-              </Modal.Footer>
-            </Modal>
           </Col>
         ))}
       </Row>
+
+      {/* Modal para exibir as imagens apenas do produto selecionado */}
+      <Modal show={showImageModal} onHide={closeImageModal} size="lg" centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Imagens do Produto</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row className="g-2">
+            {selectedProductImages.map((url, index) => (
+              <Col xs={6} md={4} key={index}> {/* Adiciona responsividade com xs e md */}
+                <Card.Img variant="top" src={url} className="product-image" />
+              </Col>
+            ))}
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeImageModal}>
+            Fechar
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       {/* Modals */}
       <EditProductModal
@@ -250,4 +247,4 @@ const Products = ({ updateCartCount }) => {
   );
 };
 
-export default Products;
+export default Products

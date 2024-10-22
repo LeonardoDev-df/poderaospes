@@ -27,7 +27,7 @@ const Footer = () => {
           <div className="col-md-4 mb-4">
             <h4 className="footer-title">Contato</h4>
             <p className="footer-text">Email: contato@lojafeminina.com</p>
-            <p className="footer-text">Telefone: (11) 1234-5678</p>
+            <p className="footer-text">Telefone: (61) 1234-5678</p>
             <div className="footer-social">
               <a href="#" className="me-2"><i className="fab fa-facebook-f"></i></a>
               <a href="#" className="me-2"><i className="fab fa-instagram"></i></a>
